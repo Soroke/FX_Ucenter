@@ -11,7 +11,7 @@ import java.util.Map;
 import static com.interfacetest.ucenter.qiantai.PublicInterFace.login;
 
 /**
- * Created by song on 2017/11/25.
+ * Created by song on 2018/02/01.
  * 开放系统
  */
 public class OpenSystem{

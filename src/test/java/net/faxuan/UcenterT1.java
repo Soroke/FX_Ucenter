@@ -10,7 +10,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 /**
- * Created by song on 2017/11/27.
+ * Created by song on 2018/02/01.
  */
 public class UcenterT1 {
     String time = GetDate.getDate();

@@ -1,0 +1,1 @@
+{"uuid":"863450c5-e178-402d-a531-6c77bd3ee72b","name":"net.faxuan.UcenterTest","start":1519960810448,"stop":1519960812942,"children":["69976092-f06f-435a-94bf-42c739a8496f","7579fab3-8c32-44cf-b533-445ccced874a","84645e91-9910-465a-85ba-6e25779d8e47"],"befores":[{"name":"mysqlInit","status":"passed","stage":"finished","description":"","start":1519960810514,"stop":1519960810531}]}

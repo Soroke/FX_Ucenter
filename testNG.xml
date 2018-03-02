@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+
+<suite name="Ucenter" verbose="1">
+    <!-- 测试数据存放地址 -->
+    <parameter name="mysql_url" value="jdbc:mysql://127.0.0.1:3306/uc?characterEncoding=UTF-8" />
+    <parameter name="mysql_user" value="root" />
+    <parameter name="mysql_pwd" value="123123" />
+
+    <test name="登录测试 -- 浏览器chrome">
+        <parameter name="logURL" value="FX003"/>
+        <classes>
+            <class name="net.faxuan.UcenterTest" />
+        </classes>
+    </test>
+</suite>

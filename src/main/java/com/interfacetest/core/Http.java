@@ -1,5 +1,6 @@
 package com.interfacetest.core;
 
+import com.interfacetest.ucenter.qiantai.UcenterHost;
 import com.interfacetest.util.JsonHelper;
 import com.sun.deploy.net.URLEncoder;
 import org.apache.http.Header;
@@ -207,7 +208,10 @@ public class Http {
     public Request get() {
         if (cookieStore == null)  cookieStore = new BasicCookieStore();
         HttpClient httpClient =  HttpClientBuilder.create().setDefaultRequestConfig(config).setDefaultCookieStore(cookieStore).build();
-        url = host + path;
+        if (path == null || path.equals("")) {
+            url = host;
+        } else url = host + path;
+
         String baseUrl = url;
         //用于计算接口请求响应时间
         Long startTime = 0L;
@@ -293,11 +297,6 @@ public class Http {
             hashMap.put(header.getName(),header.getValue());
         }
         req.setHeaders(hashMap);
-        try {
-            req.setBody(EntityUtils.toString(response.getEntity(), encode));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         req.setStatusCode(response.getStatusLine().getStatusCode());
         log.info(req);
         return req;

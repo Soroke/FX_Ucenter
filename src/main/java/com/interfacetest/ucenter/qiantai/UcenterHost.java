@@ -10,6 +10,16 @@ import java.util.Properties;
  */
 public class UcenterHost {
 
+//    private static String UCHost = "http://ucenter.test.faxuan.net/";
+//    private static String UCMSHost = "http://ucms.test.faxuan.net/";
+//
+//    public static String getUCHost() {
+//        return UCHost;
+//    }
+//    public static String getUCMSHost() {
+//        return UCHost;
+//    }
+
     /**
      * log4j打log
      */
