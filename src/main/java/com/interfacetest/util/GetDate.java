@@ -4,6 +4,7 @@ import java.util.Calendar;
 
 /**
  * Created by song on 2017/11/27.
+ * 获取当前时间
  */
 public class GetDate {
     /**

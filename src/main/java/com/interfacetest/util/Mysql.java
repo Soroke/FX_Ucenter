@@ -77,7 +77,7 @@ public class Mysql {
         return rs;
     }
     // 执行数据库插入语句
-    boolean insertSQL(String sql) {
+    public boolean insertSQL(String sql) {
         try {
             statement = conn.prepareStatement(sql);
             statement.executeUpdate();

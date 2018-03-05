@@ -1,19 +1,25 @@
 package com.interfacetest.core;
 
-import com.interfacetest.ucenter.qiantai.UcenterHost;
 import com.interfacetest.ucenter.qiantai.UserLoginInfo;
-import com.interfacetest.util.CurrentLineInfo;
 import com.interfacetest.util.JsonHelper;
 import com.interfacetest.util.Mysql;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.testng.Assert;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Parameters;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -37,6 +43,11 @@ System.out.println(url + user + pwd);
         sql.setUrl(url);
         sql.setUserName(user);
         sql.setPassWord(pwd);
+    }
+
+    @AfterClass(alwaysRun = true)
+    public void closeMysqlConnect() {
+        sql.deconnSQL();
     }
 
     /**
@@ -88,7 +99,7 @@ System.out.println(url + user + pwd);
         String loginURL = prop.getProperty("loginURL");
         String grantURL = prop.getProperty("grantURL");
 
-        System.err.println("-=-=-=" + loginURL + "-=-=-=-=-=-=-=" + grantURL + "-=-=-=-=-=-=-");
+//System.err.println("-=-=-=" + loginURL + "-=-=-=-=-=-=-=" + grantURL + "-=-=-=-=-=-=-");
         //登录
         Map<Object,Object> params = new HashMap<>();
         params.put("loginCode",user);
@@ -114,5 +125,4 @@ System.out.println(url + user + pwd);
         userLoginInfo.setCode(Integer.valueOf(response1.getRunCode()));
         return userLoginInfo;
     }
-
 }

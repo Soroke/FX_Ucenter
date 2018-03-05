@@ -2,6 +2,7 @@ package com.interfacetest.util;
 
 /**
  * Created by song on 2018/3/2.
+ * 获取当前执行文件、类、方法、行数名称工具
  */
 public class CurrentLineInfo {
     private static int originStackIndex = 2;
