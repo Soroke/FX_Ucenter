@@ -1,4 +1,4 @@
-package com.interfacetest.core;
+package net.faxuan.interfaceframework.core;
 
 /**
  * Created by song on 2018/3/2.

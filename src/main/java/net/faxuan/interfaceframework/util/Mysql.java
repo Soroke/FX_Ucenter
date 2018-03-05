@@ -1,4 +1,4 @@
-package com.interfacetest.util;
+package net.faxuan.interfaceframework.util;
 
 import java.sql.*;
 
@@ -225,30 +225,30 @@ public class Mysql {
         return obj;
     }
 
-    public Object[][] getdd(String caseName,String method){
-        connSQL();
-        String getGroupLength = "SELECT count(*) FROM cases,groups WHERE cases.`class_name`='"+ caseName+"' AND groups.method_name = '" + method + "' AND cases.id=groups.case_id;";
-        String getGroup = "SELECT url,data FROM cases,groups WHERE cases.`class_name`='"+ caseName+"' AND groups.method_name = '" + method + "' AND cases.id=groups.case_id;";
-
-        ResultSet rs = selectSQL(getGroupLength);
-        ResultSet rs1 = selectSQL(getGroup);
-        Object obj[][] = null;
-        try{
-            while (rs.next()) {
-                int length = rs.getInt("count(*)");
-                obj = new Object[length][];
-            }
-            int i=0;
-            while(rs1.next()) {
-                Object correct1 = rs1.getObject("url");
-                Object correct2 = rs1.getObject("data");
-                Object object[] = {correct1,correct2};
-                obj[i] = object;
-                i++;
-            }
-        }catch (SQLException e){
-            e.printStackTrace();
-        }
-        return obj;
-    }
+//    public Object[][] getdd(String caseName,String method){
+//        connSQL();
+//        String getGroupLength = "SELECT count(*) FROM cases,groups WHERE cases.`class_name`='"+ caseName+"' AND groups.method_name = '" + method + "' AND cases.id=groups.case_id;";
+//        String getGroup = "SELECT url,data FROM cases,groups WHERE cases.`class_name`='"+ caseName+"' AND groups.method_name = '" + method + "' AND cases.id=groups.case_id;";
+//
+//        ResultSet rs = selectSQL(getGroupLength);
+//        ResultSet rs1 = selectSQL(getGroup);
+//        Object obj[][] = null;
+//        try{
+//            while (rs.next()) {
+//                int length = rs.getInt("count(*)");
+//                obj = new Object[length][];
+//            }
+//            int i=0;
+//            while(rs1.next()) {
+//                Object correct1 = rs1.getObject("url");
+//                Object correct2 = rs1.getObject("data");
+//                Object object[] = {correct1,correct2};
+//                obj[i] = object;
+//                i++;
+//            }
+//        }catch (SQLException e){
+//            e.printStackTrace();
+//        }
+//        return obj;
+//    }
 }

@@ -1,4 +1,4 @@
-package com.interfacetest.ucenter.qiantai;
+package net.faxuan.interfaceframework.ucenter.qiantai;
 
 import org.apache.http.client.CookieStore;
 

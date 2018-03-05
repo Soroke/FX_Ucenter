@@ -9,7 +9,7 @@
 
     <test name="导入数据">
         <classes>
-            <class name="net.faxuan.UcenterTest" />
+            <class name="net.faxuan.ucenter.UcenterInterfaceTest" />
         </classes>
     </test>
 </suite>

@@ -1,4 +1,4 @@
-package com.interfacetest.ucenter.qiantai;
+package net.faxuan.interfaceframework.ucenter.qiantai;
 
 import org.apache.log4j.Logger;
 
@@ -43,7 +43,7 @@ public class UcenterHost {
                 e.printStackTrace();
             }
 
-            host = prop.getProperty("ucenter").equals("") || prop.getProperty("ucenter") == null ? host : prop.getProperty("ucenter");
+            host = prop.getProperty("ucenter.host").equals("") || prop.getProperty("ucenter.host") == null ? host : prop.getProperty("ucenter.host");
         return host;
     }
 }

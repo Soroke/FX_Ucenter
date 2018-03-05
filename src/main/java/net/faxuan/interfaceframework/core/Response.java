@@ -1,12 +1,11 @@
-package com.interfacetest.core;
+package net.faxuan.interfaceframework.core;
 
 import com.alibaba.fastjson.JSON;
-import com.interfacetest.util.JsonHelper;
-import com.interfacetest.util.Validatable;
+import net.faxuan.interfaceframework.util.JsonHelper;
+import net.faxuan.interfaceframework.util.Validatable;
 import org.apache.http.client.CookieStore;
 
 import java.util.Map;
-import static com.interfacetest.util.Validatable.*;
 
 /**
  * Created by song on 2018/3/1.
@@ -46,7 +45,7 @@ public class Response extends Validatable{
     /**
      * 请求方式
      */
-    private RequestType requestType;
+    private ResponseType responseType;
 
     /**
      * 请求状态码
@@ -57,7 +56,7 @@ public class Response extends Validatable{
      * 运行返回状态码
      * @param headers
      */
-    private String runCode;
+    private int runCode;
 
 
 
@@ -101,12 +100,12 @@ public class Response extends Validatable{
     }
 
 
-    public void setRequestType(RequestType requestType) {
-        this.requestType = requestType;
+    public void setResponseType(ResponseType responseType) {
+        this.responseType = responseType;
     }
 
-    public RequestType getRequestType() {
-        return requestType;
+    public ResponseType getResponseType() {
+        return responseType;
     }
 
     public String getBody() {
@@ -132,13 +131,13 @@ public class Response extends Validatable{
         this.cookies = cookies;
     }
 
-    public String getRunCode() {
+    public int getRunCode() {
         return runCode;
     }
 
     public int setRunCode() {
         if (!(body.equals("") || body == null)) {
-            runCode = JsonHelper.getValue(body,"code").toString();
+            runCode = new Integer(JsonHelper.getValue(body,"code").toString());
         }
         return -1;
     }

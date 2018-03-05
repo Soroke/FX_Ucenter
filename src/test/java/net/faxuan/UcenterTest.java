@@ -1,19 +1,16 @@
 package net.faxuan;
 
-import com.interfacetest.core.Http;
-import com.interfacetest.core.Response;
-import com.interfacetest.core.TestCase;
-import com.interfacetest.util.ExcelUtil;
-import com.interfacetest.util.JsonHelper;
-import org.testng.Assert;
+import net.faxuan.interfaceframework.core.Http;
+import net.faxuan.interfaceframework.core.Response;
+import net.faxuan.interfaceframework.core.TestCase;
+import net.faxuan.root.BaseLogin;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import static com.interfacetest.core.HttpS.*;
+
+import static net.faxuan.interfaceframework.core.HttpS.*;
 
 /**
  * Created by song on 2018/1/23.
@@ -66,9 +63,11 @@ public class UcenterTest extends TestCase{
         //System.err.print(CurrentLineInfo.getMethodName());
     }
 
+
+
     @Test(dataProvider = "getData")
     public void sss(String jg,String url,String data) {
-        super.login("9876543210090","ceshi123","FX001");
+        BaseLogin.signIn("9876543210090","ceshi123","FX001");
         post(url,data);
     }
 

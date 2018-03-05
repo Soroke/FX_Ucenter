@@ -1,11 +1,12 @@
 package net.faxuan;
 
-import com.interfacetest.ucenter.houtai.UCenterInterFace;
-import com.interfacetest.ucenter.qiantai.OpenSystem;
-import com.interfacetest.ucenter.qiantai.PublicInterFace;
-import com.interfacetest.ucenter.qiantai.SealSystem;
-import com.interfacetest.ucenter.qiantai.UserLoginInfo;
-import com.interfacetest.util.GetDate;
+import net.faxuan.interfaceframework.ucenter.houtai.UCenterInterFace;
+import net.faxuan.interfaceframework.ucenter.qiantai.OpenSystem;
+import net.faxuan.interfaceframework.ucenter.qiantai.PublicInterFace;
+import net.faxuan.interfaceframework.ucenter.qiantai.SealSystem;
+import net.faxuan.interfaceframework.ucenter.qiantai.UserLoginInfo;
+import net.faxuan.interfaceframework.util.ExcelUtil;
+import net.faxuan.interfaceframework.util.GetDate;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -13,6 +14,12 @@ import org.testng.annotations.Test;
  * Created by song on 2018/02/01.
  */
 public class UcenterT1 {
+    @Test
+    public void ii() {
+        ExcelUtil.importExcelData("D:/uc数据导入模板.xlsx","127.0.0.1","3306","uc","root","123123");
+
+    }
+
     String time = GetDate.getDate();
     private String FBUSER = "FBAuto" + time;
     private String KFUSER = "KFAuto" + time;

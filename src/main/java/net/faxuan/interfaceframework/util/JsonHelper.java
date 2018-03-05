@@ -1,4 +1,4 @@
-package com.interfacetest.util;
+package net.faxuan.interfaceframework.util;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;

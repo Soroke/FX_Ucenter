@@ -1,4 +1,4 @@
-package com.interfacetest.core;
+package net.faxuan.interfaceframework.core;
 
 import com.sun.deploy.net.URLEncoder;
 import org.apache.http.Header;
@@ -24,96 +24,171 @@ import java.util.*;
 import static org.apache.commons.codec.Charsets.UTF_8;
 
 /**
- * Created by song on 2018/2/28.
+ * 提供发送get和post请求 并可设置header
+ * Created by song on 2017/4/1.
  */
-public class HttpS {
+public class Http {
+    /**
+     * 测试环境host
+     */
+    private String host;
 
-     /**
+    /**
+     * api接口的path
+     */
+    private String path;
+
+    /**
+     * 测试的url
+     */
+    private String url;
+
+    /**
      * headers
      */
-     private static Map<Object,Object> headers = new HashMap<Object, Object>();
+    private Map<Object,Object> headers = new HashMap<Object, Object>();
 
-     /**
-     * Cookies
+    /**
+     * 参数
      */
-     private static CookieStore cookieStore = null;
+    private Map<Object,Object> params = new HashMap<Object, Object>();
 
-     /**
+    /**
      * 编码默认为utf-8
      */
-     private static String encode = "utf-8";
+    private String encode = "utf-8";
 
     /**
      * log4j打log
      */
-    private static Logger log = Logger.getLogger(HttpS.class);
+    private Logger log = Logger.getLogger(this.getClass());
+
+    /**
+     * 取得Request对象
+     */
+    private Request req = new Request();
+
     /**
      * 请求超时设置时长
      * 单位秒
      */
-    private static int timeOut = 15;
+    private int timeOut = 15;
+
+
+    /**
+     * Cookies
+     */
+    CookieStore cookieStore = null;
+
+
 
     /**
      * 构造httprequest设置
      * 设置请求和传输超时时间
      */
-    private static RequestConfig config = RequestConfig.custom().setConnectTimeout(timeOut * 1000).setConnectionRequestTimeout(timeOut * 1000).build();
+    RequestConfig config = RequestConfig.custom().setConnectTimeout(timeOut * 1000).setConnectionRequestTimeout(timeOut * 1000).build();
 
-
-//    public HttpS() {
-//        Properties prop = new Properties();
-//        try {
-//            prop.load(this.getClass().getClassLoader().getResourceAsStream("http.properties"));
-//        } catch (IOException e) {
-//            log.error("读取系统配置文件失败");
-//            e.printStackTrace();
-//        }
-//
-//        timeOut = Integer.parseInt(prop.getProperty("host.requestTimeOut").equals("") ? String.valueOf(timeOut) : prop.getProperty("host.requestTimeOut"));
-//    }
 
 
     /**
-     * 添加header的方法
+     * 默认无参构造方法
+     *
+     * 读取系统配置文件取得默认host并赋值给当前host
+     * 读取配置文件中的超时时长 如果没配置取默认值
+     */
+    public Http() {
+        Properties prop = new Properties();
+        try {
+            prop.load(this.getClass().getClassLoader().getResourceAsStream("http.properties"));
+        } catch (IOException e) {
+            log.error("读取系统配置文件失败");
+            e.printStackTrace();
+        }
+
+        host = prop.getProperty("ucms.host").equals("") || prop.getProperty("ucms.host") == null ? host : prop.getProperty("ucms.host");
+        timeOut = Integer.parseInt(prop.getProperty("host.requestTimeOut").equals("") ? String.valueOf(timeOut) : prop.getProperty("host.requestTimeOut"));
+    }
+
+    /**
+     * 获取cookiesStore
+     * @return
+     */
+    public CookieStore getCookieStore() {
+        return cookieStore;
+    }
+
+    /**
+     * 设置cookies
+     * @param cookieStore
+     */
+    public Http setCookieStore(CookieStore cookieStore) {
+        this.cookieStore = cookieStore;
+        return this;
+    }
+
+    /**
+     * 设置header
+     * @param headers
+     *      map
+     * @return
+     *      this
+     */
+    public Http setHeader(Map<Object,Object> headers) {
+        this.headers = headers;
+        req.setHeaders(headers);
+        return this;
+    }
+
+    /**
+     * 设置url
+     * @param url
+     *      path地址
+     * @return
+     *      this
+     */
+    public Http setUrl(String url){
+        this.path = url;
+        //req.setUrl(this.url);
+        return this;
+    }
+
+    /**
+     * 提供设置host功能，当用户设置host后就使用用户设置的host，否则使用配置文件中的host
+     * @param host
+     *      用户设置的host
+     * @return
+     *      this
+     */
+    public Http setHost(String host) {
+        this.host = host;
+        return this;
+    }
+
+    /**
+     * 设置参数
+     * @param params
+     *      参数map
+     * @return
+     *      this
+     */
+    public Http setParam(Map<Object,Object> params) {
+        this.params = params;
+        req.setParams(params);
+        return this;
+    }
+
+    /**
+     * 设置header的方法
      * @param httpRequestBase
      *      http的对象例如 HttpGet、HttpPost
      */
-    public static void addHeaderToHttpRequest(HttpRequestBase httpRequestBase) {
+    public void addHeaderToHttpRequest(HttpRequestBase httpRequestBase) {
         if(!headers.isEmpty()) {
             for(Map.Entry<Object, Object> entry : headers.entrySet()){
-//System.err.println("key:" + entry.getKey().toString() + "\tvalue:" + entry.getValue().toString());
+                System.err.println("key:" + entry.getKey().toString() + "\tvalue:" + entry.getValue().toString());
                 httpRequestBase.addHeader(entry.getKey().toString(), entry.getValue().toString());
             }
         }
-    }
-
-    public static Response post(String url,Map<Object,Object> ... params) {
-        return postRealization(url,params[0]);
-    }
-
-    public static Response post(String url,String params) {
-        Map<Object,Object> paramsN = new HashMap<Object,Object>();
-        String[] pam = params.split(",");
-        for (String p:pam) {
-            String pp[] = p.split("=");
-            paramsN.put(pp[0],pp[1]);
-        }
-        return postRealization(url,paramsN);
-    }
-
-
-    public static Response get(String url,Map<Object,Object> ... params) {
-        return getRealization(url,params[0]);
-    }
-
-    public static Response get(String url,String params) {
-        Map<Object,Object> paramsN = new HashMap<Object,Object>();
-        String[] pam = params.split(",");
-        for (String p:pam) {
-            String pp[] = p.split("=");
-            paramsN.put(pp[0],pp[1]);
-        }
-        return getRealization(url,paramsN);
     }
 
     /**
@@ -128,12 +203,14 @@ public class HttpS {
      *      状态码
      *      响应时间
      */
-    public static Response getRealization(String url,Map<Object,Object> ... params) {
+    public Request get() {
         if (cookieStore == null)  cookieStore = new BasicCookieStore();
         HttpClient httpClient =  HttpClientBuilder.create().setDefaultRequestConfig(config).setDefaultCookieStore(cookieStore).build();
+        if (path == null || path.equals("")) {
+            url = host;
+        } else url = host + path;
+
         String baseUrl = url;
-        //请求返回实体对象
-        Response rsp = new Response();
         //用于计算接口请求响应时间
         Long startTime = 0L;
         long runTime = 0L;
@@ -146,22 +223,19 @@ public class HttpS {
          * 设置get请求参数 并和url进行拼接为完整的请求地址
          * 设置请求参数的编码 格式为utf-8
          */
-        Map<Object,Object> pam = new HashMap<Object,Object>();
-        if (!(params.length == 0)) {
-            pam = params[0];
-        }
-        if(!pam.isEmpty()) {
+        if(!params.isEmpty()) {
             String param = "";
-            for (Map.Entry<Object,Object> entry : pam.entrySet()) {
+            for (Map.Entry<Object,Object> entry : params.entrySet()) {
                 if(!param.equals("")){
                     param = param + "&";
                 }
                 try{
                     param += URLEncoder.encode(entry.getKey().toString(),encode)+"="+URLEncoder.encode(entry.getValue().toString(),encode);
-                } catch (IOException ioe) {
+                } catch (IOException e) {
                     log.error("get请求参数设置utf-8编码时出错");
-                    ioe.printStackTrace();
+                    e.printStackTrace();
                 }
+
                 //打印请求参数信息
                 log.info("参数：\"" +entry.getKey() + "\":\"" + entry.getValue() + "\"");
             }
@@ -176,12 +250,12 @@ public class HttpS {
          */
         while(count < 3) {
             httpGet = new HttpGet(url);
-            addHeaderToHttpRequest(httpGet);
+            this.addHeaderToHttpRequest(httpGet);
             //请求开始时间
             startTime = new Date().getTime();
             try {
                 response = httpClient.execute(httpGet);
-                rsp.setBody(EntityUtils.toString(response.getEntity(), encode));
+                req.setBody(EntityUtils.toString(response.getEntity(), encode));
                 runTime = new Date().getTime() - startTime;
             } catch(IOException ioe) {
                 log.error("get请求发送时出错！");
@@ -210,23 +284,21 @@ public class HttpS {
         }
         log.info("接口响应时间为：" + runTime + "ms");
         log.info("------------------------请求结束------------------------");
-        rsp.setUrl(url);
-        rsp.setRunTime(runTime);
-        rsp.setRequestType(RequestType.GET);
-        rsp.setCookies(cookieStore);
+        req.setUrl(url);
+        req.setRunTime(runTime);
+        req.setRequestType(RequestType.GET);
+        req.setCookies(cookieStore);
         //保存header
         Header[] headers = response.getAllHeaders();
         Map<Object,Object> hashMap = new HashMap<Object,Object>();
         for (Header header:headers) {
             hashMap.put(header.getName(),header.getValue());
         }
-        rsp.setHeaders(hashMap);
-        rsp.setStatusCode(response.getStatusLine().getStatusCode());
-        rsp.setRunCode();
-        log.info(rsp);
-        return rsp;
+        req.setHeaders(hashMap);
+        req.setStatusCode(response.getStatusLine().getStatusCode());
+        log.info(req);
+        return req;
     }
-
 
     /**
      * 发送post请求
@@ -241,11 +313,10 @@ public class HttpS {
      *      状态码
      *      响应时间
      */
-    public static Response postRealization(String url,Map<Object,Object> ... params) {
+    public Request post() {
         if (cookieStore == null)  cookieStore = new BasicCookieStore();
         HttpClient httpClient =  HttpClientBuilder.create().setDefaultRequestConfig(config).setDefaultCookieStore(cookieStore).build();
-        //请求返回实体对象
-        Response rsp = new Response();
+        url = host + path;
         //用于计算接口请求响应时间
         Long startTime = 0L;
         long runTime = 0L;
@@ -253,18 +324,14 @@ public class HttpS {
         log.info("接口类型：post");
         log.info("接口URL为：" + url);
         HttpPost httpPost = new HttpPost(url);
-        addHeaderToHttpRequest(httpPost);
+        this.addHeaderToHttpRequest(httpPost);
         /**
          * 检查参数是否为空
          * 如果存在参数循环添加
          */
-        Map<Object,Object> pam = new HashMap<Object,Object>();
-        if (!(params.length == 0)) {
-            pam = params[0];
-        }
-        if(!pam.isEmpty()) {
+        if(!params.isEmpty()) {
             List<NameValuePair> param = new ArrayList<NameValuePair>();
-            for (Map.Entry<Object,Object> entry : pam.entrySet()) {
+            for (Map.Entry<Object,Object> entry : params.entrySet()) {
                 log.info("参数：\"" +entry.getKey() + "\":\"" + entry.getValue() + "\"");
                 param.add(new BasicNameValuePair(entry.getKey().toString(), entry.getValue().toString()));
             }
@@ -282,7 +349,7 @@ public class HttpS {
             startTime = new Date().getTime();
             try {
                 response = httpClient.execute(httpPost);
-                rsp.setBody(EntityUtils.toString(response.getEntity(), encode));
+                req.setBody(EntityUtils.toString(response.getEntity(), encode));
                 runTime = new Date().getTime() - startTime;
             } catch(IOException ioe) {
                 log.error("post请求发送时出错");
@@ -312,21 +379,21 @@ public class HttpS {
 
         log.info("接口响应时间为：" + runTime + "ms");
         log.info("------------------------请求结束------------------------");
-        rsp.setUrl(url);
-        rsp.setRunTime(runTime);
-        rsp.setRequestType(RequestType.POST);
-        rsp.setCookies(cookieStore);
+        req.setUrl(url);
+        req.setRunTime(runTime);
+        req.setRequestType(RequestType.POST);
+        req.setCookies(cookieStore);
         //保存header
         Header[] headers = response.getAllHeaders();
         Map<Object,Object> hashMap= new HashMap<Object,Object>();
         for (Header header:headers) {
             hashMap.put(header.getName(),header.getValue());
         }
-        rsp.setHeaders(hashMap);
-        rsp.setStatusCode(response.getStatusLine().getStatusCode());
-        rsp.setRunCode();
-        log.info(rsp);
+        req.setHeaders(hashMap);
+        req.setStatusCode(response.getStatusLine().getStatusCode());
+        log.info(req);
 
-        return rsp;
+        return req;
     }
+
 }

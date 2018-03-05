@@ -1,8 +1,8 @@
-package com.interfacetest.ucenter.qiantai;
+package net.faxuan.interfaceframework.ucenter.qiantai;
 
-import com.interfacetest.core.Http;
-import com.interfacetest.core.Request;
-import com.interfacetest.util.JsonHelper;
+import net.faxuan.interfaceframework.core.Http;
+import net.faxuan.interfaceframework.core.Request;
+import net.faxuan.interfaceframework.util.JsonHelper;
 import org.apache.http.client.CookieStore;
 
 import java.util.HashMap;

@@ -1,4 +1,4 @@
-package com.interfacetest.core;
+package net.faxuan.interfaceframework.core;
 
 import com.alibaba.fastjson.JSON;
 import org.apache.http.client.CookieStore;

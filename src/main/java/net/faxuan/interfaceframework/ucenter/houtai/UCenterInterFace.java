@@ -1,8 +1,8 @@
-package com.interfacetest.ucenter.houtai;
+package net.faxuan.interfaceframework.ucenter.houtai;
 
-import com.interfacetest.core.Http;
-import com.interfacetest.core.Request;
-import com.interfacetest.util.JsonHelper;
+import net.faxuan.interfaceframework.core.Http;
+import net.faxuan.interfaceframework.core.Request;
+import net.faxuan.interfaceframework.util.JsonHelper;
 
 import java.util.HashMap;
 import java.util.Map;
