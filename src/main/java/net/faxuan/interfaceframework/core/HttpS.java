@@ -87,6 +87,14 @@ public class HttpS {
         }
     }
 
+    /**
+     * 设置cookies
+     * @param cookieStore
+     */
+    public static void setCookieStore(CookieStore cookieStor) {
+        cookieStore = cookieStor;
+    }
+
     public static Response post(String url,Map<Object,Object> ... params) {
         return postRealization(url,params[0]);
     }

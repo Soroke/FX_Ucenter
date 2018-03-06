@@ -15,6 +15,7 @@ import static net.faxuan.interfaceframework.core.HttpS.get;
 import static net.faxuan.interfaceframework.core.HttpS.post;
 
 /**
+ * 用户登录退出
  * Created by song on 2018/3/5.
  */
 public class BaseLogin {
@@ -51,16 +52,7 @@ public class BaseLogin {
         loginTypeCode = loginType;
         loginSystemCode = loginSysCode;
         userFromSystemCode = userFromSysCode;
-        Properties prop = new Properties();
-        try {
-            prop.load(TestCase.class.getClassLoader().getResourceAsStream("http.properties"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        String ucmsHost = prop.getProperty("ucms.host");
-        String ucenterHost = prop.getProperty("ucenter.host");
 
-//System.err.println("-=-=-=" + loginURL + "-=-=-=-=-=-=-=" + grantURL + "-=-=-=-=-=-=-");
         //登录
         Map<Object,Object> params = new HashMap<>();
         params.put("loginCode",user);
@@ -68,10 +60,10 @@ public class BaseLogin {
         params.put("sysCode",loginSysCode);
         params.put("chooseSysCode",userFromSysCode);
         params.put("userPassword",passwd);
-        Response response = get(ucmsHost + "/ucds/ucenter/checkLoginUserAccount.do",params);
+        Response response = get("http://ucms.test.faxuan.net/ucds/ucenter/checkLoginUserAccount.do",params);
         String userEncryptCode = JsonHelper.getValue(response.getBody(),"data.userEncryptCode").toString();
         String userAccount = JsonHelper.getValue(response.getBody(),"data.userAccount").toString();
-        Assert.assertEquals(response.getRunCode(),"200");
+        Assert.assertEquals(response.getRunCode(),200);
         //认证用户中心并return登录成功用户的token和cookie
         UserLoginInfo userLoginInfo = new UserLoginInfo();
         params.clear();
@@ -79,7 +71,7 @@ public class BaseLogin {
         params.put("sysCode",loginSysCode);
         params.put("chooseSysCode",userFromSysCode);
         params.put("userAccount",userAccount);
-        Response response1 = post(ucenterHost + "/rzds/ucenter/grantSystem.do",params);
+        Response response1 = post("http://ucenter.test.faxuan.net/rzds/ucenter/grantSystem.do",params);
         String token = JsonHelper.getValue(response1.getBody(),"data.token").toString();
         userLoginInfo.setToken(token);
         userLoginInfo.setCookieStore(response1.getCookies());

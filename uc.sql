@@ -4,13 +4,13 @@ Navicat MySQL Data Transfer
 Source Server         : localhost
 Source Server Version : 50721
 Source Host           : 127.0.0.1:3306
-Source Database       : uc
+Source Database       : uuu
 
 Target Server Type    : MYSQL
 Target Server Version : 50721
 File Encoding         : 65001
 
-Date: 2018-03-02 15:47:49
+Date: 2018-03-06 15:20:23
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -22,9 +22,9 @@ DROP TABLE IF EXISTS `cases`;
 CREATE TABLE `cases` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` char(255) NOT NULL COMMENT '用例名称',
-  `function` varchar(255) DEFAULT NULL COMMENT '用例目的',
+  `function` varchar(255) DEFAULT NULL COMMENT '测试类描述',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for `datas`
@@ -32,24 +32,24 @@ CREATE TABLE `cases` (
 DROP TABLE IF EXISTS `datas`;
 CREATE TABLE `datas` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '输入数据的id',
-  `group_id` int(11) NOT NULL,
-  `step` int(11) NOT NULL COMMENT '第几步要用',
-  `data` varchar(255) DEFAULT NULL COMMENT '数据',
+  `method_id` int(11) NOT NULL COMMENT '方法ID',
+  `url` varchar(255) NOT NULL COMMENT '接口url',
+  `params` varchar(255) NOT NULL COMMENT '参数',
+  `description` varchar(255) DEFAULT NULL COMMENT '测试功能描述',
   PRIMARY KEY (`id`),
-  KEY `group_id` (`group_id`),
-  CONSTRAINT `group_id` FOREIGN KEY (`group_id`) REFERENCES `groups` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8;
+  KEY `method_id` (`method_id`),
+  CONSTRAINT `method_id` FOREIGN KEY (`method_id`) REFERENCES `methods` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
--- Table structure for `groups`
+-- Table structure for `methods`
 -- ----------------------------
-DROP TABLE IF EXISTS `groups`;
-CREATE TABLE `groups` (
-  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '组的id',
+DROP TABLE IF EXISTS `methods`;
+CREATE TABLE `methods` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '方法ID',
   `case_id` int(11) NOT NULL COMMENT '所属用例',
-  `result_correct` varchar(255) DEFAULT NULL COMMENT '预期测试结果',
-  `result_actual` varchar(255) DEFAULT NULL COMMENT '实际测试结果',
+  `method_name` varchar(255) NOT NULL COMMENT '方法名',
   PRIMARY KEY (`id`),
   KEY `case_id` (`case_id`),
   CONSTRAINT `case_id` FOREIGN KEY (`case_id`) REFERENCES `cases` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;

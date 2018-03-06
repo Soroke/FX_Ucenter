@@ -3,13 +3,13 @@
 
 <suite name="Ucenter接口" verbose="1">
     <!-- 测试数据存放地址 -->
-    <parameter name="mysql_url" value="jdbc:mysql://127.0.0.1:3306/uc?useSSL=true&amp;characterEncoding=UTF-8" />
+    <parameter name="mysql_url" value="jdbc:mysql://127.0.0.1:3306/uuu?useSSL=true&amp;characterEncoding=UTF-8" />
     <parameter name="mysql_user" value="root" />
     <parameter name="mysql_pwd" value="123123" />
 
     <test name="导入数据">
         <classes>
-            <class name="net.faxuan.ucenter.UcenterInterfaceTest" />
+            <class name="net.faxuan.ucenter.Register"/>
         </classes>
     </test>
 </suite>

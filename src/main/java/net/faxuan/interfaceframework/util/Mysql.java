@@ -121,27 +121,7 @@ public class Mysql {
         }
         return false;
     }
-    // 将返回结果按照一定格式显示
-    void layoutStyle2(ResultSet rs) {
-        System.out.println("-----------------");
-        System.out.println("执行结果如下所示:");
-        System.out.println("-----------------");
-        System.out.println(" ID" + "/t/t" + "name" + "/t/t" + "说明");
-        System.out.println("-----------------");
-        try {
-            while (rs.next()) {
-                System.out.println(rs.getInt("id") + "/t/t"
-                        + rs.getString("name") + "/t/t"
-                        + rs.getString("function"));
-            }
-        } catch (SQLException e) {
-            System.out.println("显示时数据库出错。");
-            e.printStackTrace();
-        } catch (Exception e) {
-            System.out.println("显示出错。");
-            e.printStackTrace();
-        }
-    }
+
 
     /**
      *按照 用例的名称查询该用例有多少组数据
@@ -225,30 +205,36 @@ public class Mysql {
         return obj;
     }
 
-//    public Object[][] getdd(String caseName,String method){
-//        connSQL();
-//        String getGroupLength = "SELECT count(*) FROM cases,groups WHERE cases.`class_name`='"+ caseName+"' AND groups.method_name = '" + method + "' AND cases.id=groups.case_id;";
-//        String getGroup = "SELECT url,data FROM cases,groups WHERE cases.`class_name`='"+ caseName+"' AND groups.method_name = '" + method + "' AND cases.id=groups.case_id;";
-//
-//        ResultSet rs = selectSQL(getGroupLength);
-//        ResultSet rs1 = selectSQL(getGroup);
-//        Object obj[][] = null;
-//        try{
-//            while (rs.next()) {
-//                int length = rs.getInt("count(*)");
-//                obj = new Object[length][];
-//            }
-//            int i=0;
-//            while(rs1.next()) {
-//                Object correct1 = rs1.getObject("url");
-//                Object correct2 = rs1.getObject("data");
-//                Object object[] = {correct1,correct2};
-//                obj[i] = object;
-//                i++;
-//            }
-//        }catch (SQLException e){
-//            e.printStackTrace();
-//        }
-//        return obj;
-//    }
+    /**
+     * 获取测试数据
+     * @param ClassName 测试类的类名
+     * @param method 当前测试方法的方法名
+     * @return 测试数据
+     */
+    public Object[][] getData(String ClassName,String method){
+        connSQL();
+        String getGroupLength = "SELECT COUNT(*) count FROM datas WHERE method_id = ( SELECT id FROM methods WHERE case_id = ( SELECT id FROM cases WHERE `name` = '"+ ClassName + "' ) AND method_name = '" + method + "' )";
+        String getGroup = "SELECT * FROM datas WHERE method_id = ( SELECT id FROM methods WHERE case_id = ( SELECT id FROM cases WHERE `name` = '"+ ClassName + "' ) AND method_name = '" + method + "' )";
+        ResultSet rs1 = selectSQL(getGroupLength);
+        ResultSet rs2 = selectSQL(getGroup);
+        Object obj[][] = null;
+        try{
+            while (rs1.next()) {
+                int length = rs1.getInt("count");
+                obj = new Object[length][];
+            }
+            while (rs2.next()) {
+                Object url = rs2.getObject("url");
+                Object params = rs2.getObject("params");
+                Object description = rs2.getObject("description");
+                Object[] data = {description,url,params};
+                obj[rs2.getRow()-1] = data;
+            }
+        }catch (SQLException e){
+            System.err.println("数据为空");
+            e.printStackTrace();
+        }
+        deconnSQL();
+        return obj;
+    }
 }

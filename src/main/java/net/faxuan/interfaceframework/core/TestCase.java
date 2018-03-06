@@ -3,10 +3,13 @@ package net.faxuan.interfaceframework.core;
 import net.faxuan.interfaceframework.util.Mysql;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.testng.ITestContext;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Parameters;
+
+import java.lang.reflect.Method;
 
 /**
  * Created by song on 2018/3/2.
@@ -39,8 +42,9 @@ System.out.println(url + user + pwd);
      * @return mysql.getJDBCData(String caseName)返回的Object[][]对象数组
      */
     @DataProvider
-    public Object[][] getData(){
-        return sql.getJDBCData(this.getClass().getName());
+    public Object[][] getData(Method method){
+//System.err.println(this.getClass().getName() + "-----" + method.getName());
+        return sql.getData(this.getClass().getName(),method.getName());
     }
 
 }

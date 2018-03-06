@@ -49,33 +49,32 @@ public class ExcelUtil {
                     continue;
                 }
                 XSSFCell classNameCell = row.getCell(0); // 类名列
-                XSSFCell descriptionCell = row.getCell(1); // 测试功能描述列
-                XSSFCell resultCell = row.getCell(2); // 预期结果列
-                XSSFCell urlCell = row.getCell(3); // 测试地址列
-                XSSFCell paramCell = row.getCell(4); // 测试参数列
+                XSSFCell methodNameCell = row.getCell(1); // 方法名
+                XSSFCell URLCell = row.getCell(2); // 测试url
+                XSSFCell paramCell = row.getCell(3); // 参数
+                XSSFCell descriptionCell = row.getCell(4); // 测试功能描述
                 //拼接已获取数据
                 employeeInfoBuilder.append("测试数据 --> ")
                         .append("类名 : ").append(classNameCell.getStringCellValue())
-                        .append(" , 测试功能描述 : ").append(descriptionCell.getStringCellValue())
-                        .append(" , 预期结果 : ").append(resultCell.getStringCellValue())
-                        .append(" , 测试地址 : ").append(urlCell.getStringCellValue())
-                        .append(" , 测试参数 : ").append(paramCell.getStringCellValue());
+                        .append(" , 方法名 : ").append(methodNameCell.getStringCellValue())
+                        .append(" , 测试url : ").append(URLCell.getStringCellValue())
+                        .append(" , 参数 : ").append(paramCell.getStringCellValue())
+                        .append(" , 测试功能描述 : ").append(descriptionCell.getStringCellValue());
                 //执行数据库插入
                 ResultSet rs1 = sql.selectSQL("SELECT id FROM cases WHERE `name`='" + classNameCell + "';");
                 rs1.last();
                 if (rs1.getRow() <= 0) {
-                    sql.insertSQL("INSERT INTO cases(name,function) VALUES('" + classNameCell + "','" + descriptionCell + "');");
+                    sql.insertSQL("INSERT INTO cases(name) VALUES('" + classNameCell + "');");
                 }
-                rs1 = sql.selectSQL("SELECT id FROM groups WHERE `case_id`=(SELECT id FROM cases WHERE `name`='" + classNameCell + "') AND result_correct='" + resultCell + "';");
+                rs1 = sql.selectSQL("SELECT id FROM methods WHERE `case_id`=(SELECT id FROM cases WHERE `name`='" + classNameCell + "') AND method_name='" + methodNameCell + "';");
                 rs1.last();
                 if (rs1.getRow() <= 0) {
-                    sql.insertSQL("INSERT INTO groups(case_id,result_correct) VALUES((SELECT id FROM cases WHERE name='" + classNameCell + "'),'" + resultCell + "');");
+                    sql.insertSQL("INSERT INTO methods(case_id,method_name) VALUES((SELECT id FROM cases WHERE name='" + classNameCell + "'),'" + methodNameCell + "');");
                 }
-                rs1 = sql.selectSQL("SELECT id FROM datas WHERE `group_id`=(SELECT id FROM groups WHERE case_id=(SELECT id FROM cases WHERE name='" + classNameCell + "') AND result_correct='" + resultCell + "') AND (data='" + urlCell + "' OR data='" + paramCell + "');");
+                rs1 = sql.selectSQL("SELECT id FROM datas WHERE `method_id`=(SELECT id FROM methods WHERE case_id=(SELECT id FROM cases WHERE name='" + classNameCell + "') AND method_name='" + methodNameCell + "') AND url='" + URLCell + "' AND params='" + paramCell + "' AND description='" + descriptionCell + "';");
                 rs1.last();
                 if (rs1.getRow() <= 0) {
-                    sql.insertSQL("INSERT INTO datas(group_id,step,data) VALUES((SELECT id FROM groups WHERE case_id=(SELECT id FROM cases WHERE name='" + classNameCell + "') AND result_correct='" + resultCell + "'),1,'" + urlCell +"');");
-                    sql.insertSQL("INSERT INTO datas(group_id,step,data) VALUES((SELECT id FROM groups WHERE case_id=(SELECT id FROM cases WHERE name='" + classNameCell + "') AND result_correct='" + resultCell + "'),2,'" + paramCell +"');");
+                    sql.insertSQL("INSERT INTO datas(method_id,url,params,description) VALUES((SELECT id FROM methods WHERE case_id=(SELECT id FROM cases WHERE name='" + classNameCell + "') AND method_name='" + methodNameCell + "'),'" + URLCell + "','" + paramCell +"','" + descriptionCell +"');");
                     System.out.println(employeeInfoBuilder.toString()+ "----->导入成功");
                 } else System.err.println(employeeInfoBuilder.toString()+ "----->数据已存在");
             }
