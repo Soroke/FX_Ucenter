@@ -20,11 +20,8 @@ import static net.faxuan.interfaceframework.core.HttpS.post;
  */
 public class BaseLogin {
 
-    private static String userName;
-    private static String password;
-    private static int loginTypeCode;
     private static String loginSystemCode;
-    private static String userFromSystemCode;
+    private static String TOKEN;
 
     public static UserLoginInfo signIn(String userName, String password, String systemCode) {
         return loginSystem(userName,password,1,systemCode,systemCode);
@@ -47,11 +44,7 @@ public class BaseLogin {
      * @return  用户的登录token和cookie
      */
     private static UserLoginInfo loginSystem(String user,String passwd,int loginType,String loginSysCode,String userFromSysCode) {
-        userName = user;
-        password=passwd;
-        loginTypeCode = loginType;
         loginSystemCode = loginSysCode;
-        userFromSystemCode = userFromSysCode;
 
         //登录
         Map<Object,Object> params = new HashMap<>();
@@ -71,13 +64,36 @@ public class BaseLogin {
         params.put("sysCode",loginSysCode);
         params.put("chooseSysCode",userFromSysCode);
         params.put("userAccount",userAccount);
-        Response response1 = post("http://ucenter.test.faxuan.net/rzds/ucenter/grantSystem.do",params);
+        Response response1 = get("http://ucenter.test.faxuan.net/rzds/ucenter/grantSystem.do",params);
         String token = JsonHelper.getValue(response1.getBody(),"data.token").toString();
+        TOKEN = token;
         userLoginInfo.setToken(token);
         userLoginInfo.setCookieStore(response1.getCookies());
         userLoginInfo.setCode(Integer.valueOf(response1.getRunCode()));
         return userLoginInfo;
     }
 
+    /**
+     * 退出当前登录用户
+     * @return 是否退出成功
+     */
+    public static Boolean signOut(){
+        Map<Object,Object> params = new HashMap<>();
+        params.put("sysCode",loginSystemCode);
+        params.put("token",TOKEN);
+        Response response = get("http://ucenter.test.faxuan.net/rzds/ucenter/logoutUser.do",params);
+        try {
+            Assert.assertEquals(response.getRunCode(),200);
+            return true;
+        } catch (AssertionError error) {
+            response = get("http://ucenter.test.faxuan.net/rzds/ucenter/FBLogoutUser.do",params);
+        }
+        try {
+            Assert.assertEquals(response.getRunCode(), 200);
+        } catch (AssertionError error) {
+            return false;
+        }
+        return true;
+    }
 
 }

@@ -12,6 +12,16 @@ public class UserLoginInfo {
     private CookieStore cookieStore;
     //token信息
     private String token;
+    //系统编码
+    private String sysCode;
+
+    public String getSysCode() {
+        return sysCode;
+    }
+
+    public void setSysCode(String sysCode) {
+        this.sysCode = sysCode;
+    }
 
     public int getCode() {
         return code;

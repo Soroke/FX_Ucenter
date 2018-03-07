@@ -7,6 +7,7 @@ import net.faxuan.interfaceframework.ucenter.qiantai.SealSystem;
 import net.faxuan.interfaceframework.ucenter.qiantai.UserLoginInfo;
 import net.faxuan.interfaceframework.util.ExcelUtil;
 import net.faxuan.interfaceframework.util.GetDate;
+import net.faxuan.interfaceframework.util.Mysql;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -152,7 +153,7 @@ public class UcenterT1 {
         //封闭系统用户登录开放系统
         UserLoginInfo userLoginInfo = PublicInterFace.login(KFUSER,USERPASSWORD,FBXTCODE,KFXTCODE);
         Assert.assertEquals(userLoginInfo.getCode(),200);
-        //封闭系统用户刷新开放系统
+        //封闭系统用户刷新开放系统e
         userLoginInfo = SealSystem.FBRefresh(FBXTCODE,userLoginInfo.getCookieStore());
 //        OpenSystem.refreshtUser(KFXTCODE,userLoginInfo.getCookieStore());
         Assert.assertEquals(userLoginInfo.getCode(),200);
@@ -218,4 +219,16 @@ public class UcenterT1 {
     public void getUserDetail() {
         Assert.assertEquals(UCenterInterFace.getUserDetail(FBUSER,FBXTCODE),200);
     }
+
+    @Test
+    public void testins() {
+        Mysql mysql = new Mysql();
+        mysql.setUrl("jdbc:mysql://27.221.58.101:3308/autotest?useSSL=true&characterEncoding=UTF-8");
+        mysql.setUserName("root");
+        mysql.setPassWord("xfDB_xntest.223");
+        mysql.connSQL();
+        mysql.insertSQL("insert into test_data(cid,imput_data,except_data) values ('11','18612340001;ceshi123;18612340002;18643210001;','手机修改成功;')");
+        mysql.deconnSQL();
+    }
+
 }

@@ -52,14 +52,10 @@ public class ExcelUtil {
                 XSSFCell methodNameCell = row.getCell(1); // 方法名
                 XSSFCell URLCell = row.getCell(2); // 测试url
                 XSSFCell paramCell = row.getCell(3); // 参数
-                XSSFCell descriptionCell = row.getCell(4); // 测试功能描述
-                //拼接已获取数据
-                employeeInfoBuilder.append("测试数据 --> ")
-                        .append("类名 : ").append(classNameCell.getStringCellValue())
-                        .append(" , 方法名 : ").append(methodNameCell.getStringCellValue())
-                        .append(" , 测试url : ").append(URLCell.getStringCellValue())
-                        .append(" , 参数 : ").append(paramCell.getStringCellValue())
-                        .append(" , 测试功能描述 : ").append(descriptionCell.getStringCellValue());
+                XSSFCell preconditionCell = row.getCell(4); // 前置条件
+                XSSFCell expectedResultCell = row.getCell(5); // 预期结果
+                XSSFCell descriptionCell = row.getCell(6); // 测试功能描述
+
                 //执行数据库插入
                 ResultSet rs1 = sql.selectSQL("SELECT id FROM cases WHERE `name`='" + classNameCell + "';");
                 rs1.last();
@@ -74,8 +70,32 @@ public class ExcelUtil {
                 rs1 = sql.selectSQL("SELECT id FROM datas WHERE `method_id`=(SELECT id FROM methods WHERE case_id=(SELECT id FROM cases WHERE name='" + classNameCell + "') AND method_name='" + methodNameCell + "') AND url='" + URLCell + "' AND params='" + paramCell + "' AND description='" + descriptionCell + "';");
                 rs1.last();
                 if (rs1.getRow() <= 0) {
-                    sql.insertSQL("INSERT INTO datas(method_id,url,params,description) VALUES((SELECT id FROM methods WHERE case_id=(SELECT id FROM cases WHERE name='" + classNameCell + "') AND method_name='" + methodNameCell + "'),'" + URLCell + "','" + paramCell +"','" + descriptionCell +"');");
-                    System.out.println(employeeInfoBuilder.toString()+ "----->导入成功");
+                    try {
+                        preconditionCell.toString();
+                        //拼接已获取数据
+                        employeeInfoBuilder.append("测试数据 --> ")
+                                .append("类名 : ").append(classNameCell.getStringCellValue())
+                                .append(" , 方法名 : ").append(methodNameCell.getStringCellValue())
+                                .append(" , 测试url : ").append(URLCell.getStringCellValue())
+                                .append(" , 参数 : ").append(paramCell.getStringCellValue())
+                                .append(" , 前置条件 : ").append(preconditionCell.getStringCellValue())
+                                .append(" , 预期结果code : ").append(expectedResultCell.getNumericCellValue())
+                                .append(" , 测试功能描述 : ").append(descriptionCell.getStringCellValue());
+                        sql.insertSQL("INSERT INTO datas(method_id,url,params,expected_results,description,precondition) VALUES((SELECT id FROM methods WHERE case_id=(SELECT id FROM cases WHERE name='" + classNameCell + "') AND method_name='" + methodNameCell + "'),'" + URLCell + "','" + paramCell +"'," + expectedResultCell +",'" + descriptionCell +"','" + preconditionCell +"');");
+                        System.out.println(employeeInfoBuilder.toString()+ "----->导入成功");
+                    } catch (NullPointerException e) {
+                        //拼接已获取数据
+                        employeeInfoBuilder.append("测试数据 --> ")
+                                .append("类名 : ").append(classNameCell.getStringCellValue())
+                                .append(" , 方法名 : ").append(methodNameCell.getStringCellValue())
+                                .append(" , 测试url : ").append(URLCell.getStringCellValue())
+                                .append(" , 参数 : ").append(paramCell.getStringCellValue())
+                                .append(" , 前置条件 : ").append("无")
+                                .append(" , 预期结果code : ").append(expectedResultCell.getNumericCellValue())
+                                .append(" , 测试功能描述 : ").append(descriptionCell.getStringCellValue());
+                        sql.insertSQL("INSERT INTO datas(method_id,url,params,expected_results,description) VALUES((SELECT id FROM methods WHERE case_id=(SELECT id FROM cases WHERE name='" + classNameCell + "') AND method_name='" + methodNameCell + "'),'" + URLCell + "','" + paramCell +"'," + expectedResultCell +",'" + descriptionCell +"');");
+                        System.out.println(employeeInfoBuilder.toString()+ "----->导入成功");
+                    }
                 } else System.err.println(employeeInfoBuilder.toString()+ "----->数据已存在");
             }
             workbook.close();

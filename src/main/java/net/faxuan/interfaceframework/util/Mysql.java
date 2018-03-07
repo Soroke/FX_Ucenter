@@ -226,8 +226,10 @@ public class Mysql {
             while (rs2.next()) {
                 Object url = rs2.getObject("url");
                 Object params = rs2.getObject("params");
+                Object precondition = rs2.getObject("precondition");
+                Object result = rs2.getObject("expected_results");
                 Object description = rs2.getObject("description");
-                Object[] data = {description,url,params};
+                Object[] data = {description,precondition,result,url,params};
                 obj[rs2.getRow()-1] = data;
             }
         }catch (SQLException e){
