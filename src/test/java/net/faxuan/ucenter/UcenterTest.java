@@ -19,7 +19,8 @@ public class UcenterTest extends TestCase{
     @Test(dataProvider = "getData")
         public void currency(String description,String precondition,int result,String url,String params) {
         log.info(description);
-        if (precondition != null || !precondition.equals("")) {
+
+        try{
             String[] loginfo = precondition.split(",");
             switch (loginfo.length) {
                 case 3:
@@ -37,7 +38,7 @@ public class UcenterTest extends TestCase{
             Response response = get(url,params);
             BaseLogin.signOut();
             Assert.assertEquals(result,response.getRunCode());
-        } else {
+        } catch (NullPointerException e) {
             Response response = get(url,params);
             Assert.assertEquals(result,response.getRunCode());
         }
