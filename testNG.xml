@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 
-<suite name="Ucenter接口" verbose="1">
+<suite name="接口测试" verbose="1">
     <!-- 测试数据存放地址 -->
     <parameter name="mysql_url" value="jdbc:mysql://127.0.0.1:3306/uuu?useSSL=true&amp;characterEncoding=UTF-8" />
     <parameter name="mysql_user" value="root" />

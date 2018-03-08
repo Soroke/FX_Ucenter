@@ -1,18 +1,14 @@
 package net.faxuan.root;
 
 import net.faxuan.interfaceframework.core.Response;
-import net.faxuan.interfaceframework.core.TestCase;
-import net.faxuan.interfaceframework.ucenter.qiantai.UserLoginInfo;
+import net.faxuan.interfaceframework.core.UserLoginInfo;
 import net.faxuan.interfaceframework.util.JsonHelper;
-import org.testng.Assert;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
 
-import static net.faxuan.interfaceframework.core.HttpS.get;
-import static net.faxuan.interfaceframework.core.HttpS.post;
+import static net.faxuan.interfaceframework.core.Http.get;
+import static net.faxuan.interfaceframework.core.Http.post;
 
 /**
  * 用户登录退出
@@ -53,10 +49,9 @@ public class BaseLogin {
         params.put("sysCode",loginSysCode);
         params.put("chooseSysCode",userFromSysCode);
         params.put("userPassword",passwd);
-        Response response = get("http://ucms.test.faxuan.net/ucds/ucenter/checkLoginUserAccount.do",params);
-        String userEncryptCode = JsonHelper.getValue(response.getBody(),"data.userEncryptCode").toString();
-        String userAccount = JsonHelper.getValue(response.getBody(),"data.userAccount").toString();
-        Assert.assertEquals(response.getRunCode(),200);
+        Response response = get("http://ucms.test.faxuan.net/ucds/ucenter/checkLoginUserAccount.do",params).body("code",200);
+        String userEncryptCode = response.getValueFromBody("data.userEncryptCode").toString();
+        String userAccount = response.getValueFromBody("data.userAccount").toString();
         //认证用户中心并return登录成功用户的token和cookie
         UserLoginInfo userLoginInfo = new UserLoginInfo();
         params.clear();
@@ -69,7 +64,7 @@ public class BaseLogin {
         TOKEN = token;
         userLoginInfo.setToken(token);
         userLoginInfo.setCookieStore(response1.getCookies());
-        userLoginInfo.setCode(Integer.valueOf(response1.getRunCode()));
+        userLoginInfo.setCode(Integer.valueOf(response1.getValueFromBody("code").toString()));
         return userLoginInfo;
     }
 
@@ -81,19 +76,17 @@ public class BaseLogin {
         Map<Object,Object> params = new HashMap<>();
         params.put("sysCode",loginSystemCode);
         params.put("token",TOKEN);
-        Response response = get("http://ucenter.test.faxuan.net/rzds/ucenter/logoutUser.do",params);
         try {
-            Assert.assertEquals(response.getRunCode(),200);
+            get("http://ucenter.test.faxuan.net/rzds/ucenter/logoutUser.do",params).body("code",200);
             return true;
         } catch (AssertionError error) {
-            response = get("http://ucenter.test.faxuan.net/rzds/ucenter/FBLogoutUser.do",params);
+            try {
+                get("http://ucenter.test.faxuan.net/rzds/ucenter/FBLogoutUser.do",params).body("code",200);
+                return true;
+            } catch (AssertionError ae) {
+                return false;
+            }
         }
-        try {
-            Assert.assertEquals(response.getRunCode(), 200);
-        } catch (AssertionError error) {
-            return false;
-        }
-        return true;
     }
 
 }

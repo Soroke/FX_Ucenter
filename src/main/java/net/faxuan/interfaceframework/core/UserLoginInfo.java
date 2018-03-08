@@ -1,4 +1,4 @@
-package net.faxuan.interfaceframework.ucenter.qiantai;
+package net.faxuan.interfaceframework.core;
 
 import org.apache.http.client.CookieStore;
 
@@ -6,22 +6,12 @@ import org.apache.http.client.CookieStore;
  * Created by song on 2017/11/27.
  */
 public class UserLoginInfo {
-    //返回状态编码
+    //json返回状态编码
     private int code;
     //cookie信息
     private CookieStore cookieStore;
     //token信息
     private String token;
-    //系统编码
-    private String sysCode;
-
-    public String getSysCode() {
-        return sysCode;
-    }
-
-    public void setSysCode(String sysCode) {
-        this.sysCode = sysCode;
-    }
 
     public int getCode() {
         return code;

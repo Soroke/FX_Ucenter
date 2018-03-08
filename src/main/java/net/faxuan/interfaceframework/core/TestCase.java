@@ -30,6 +30,9 @@ System.out.println(url + user + pwd);
         sql.setPassWord(pwd);
     }
 
+    /**
+     * 关闭数据库链接
+     */
     @AfterClass(alwaysRun = true)
     public void closeMysqlConnect() {
         sql.deconnSQL();
@@ -43,8 +46,22 @@ System.out.println(url + user + pwd);
      */
     @DataProvider
     public Object[][] getData(Method method){
-//System.err.println(this.getClass().getName() + "-----" + method.getName());
         return sql.getData(this.getClass().getName(),method.getName());
+    }
+
+    /**
+     * 检查字符串是否为空指针
+     * @param content
+     * @return Boolean TRUE为空，FALSE不为空
+     */
+    public boolean isNull(String content) {
+        boolean b = false;
+        try {
+            content.isEmpty();
+        } catch (NullPointerException npe) {
+            b = true;
+        }
+        return b;
     }
 
 }

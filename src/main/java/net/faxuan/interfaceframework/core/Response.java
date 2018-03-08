@@ -2,15 +2,16 @@ package net.faxuan.interfaceframework.core;
 
 import com.alibaba.fastjson.JSON;
 import net.faxuan.interfaceframework.util.JsonHelper;
-import net.faxuan.interfaceframework.util.Validatable;
 import org.apache.http.client.CookieStore;
+import org.apache.log4j.Logger;
+import org.testng.Assert;
 
 import java.util.Map;
 
 /**
  * Created by song on 2018/3/1.
  */
-public class Response extends Validatable{
+public class Response{
 
     /**
      * headers
@@ -53,11 +54,9 @@ public class Response extends Validatable{
     private int statusCode;
 
     /**
-     * 运行返回状态码
-     * @param headers
+     * log4j打log
      */
-    private int runCode;
-
+    private Logger log = Logger.getLogger(this.getClass());
 
 
     public void setHeaders(Map<Object,Object> headers) {
@@ -131,20 +130,41 @@ public class Response extends Validatable{
         this.cookies = cookies;
     }
 
-    public int getRunCode() {
-        return runCode;
-    }
-
-    public int setRunCode() {
-        if (!(body.equals("") || body == null)) {
-            runCode = new Integer(JsonHelper.getValue(body,"code").toString());
-        }
-        return -1;
-    }
     @Override
     public String toString() {
         return JSON.toJSON(this).toString();
     }
 
+
+    /**
+     * 验证返回body中json的指定值
+     * @param position 在json中的位置
+     * @param contrastive 对比数据
+     */
+    public Response body(String position,Object contrastive) {
+        Object object = null;
+        if (contrastive instanceof String) {
+            object=JsonHelper.getValue(body,position).toString();
+            Assert.assertEquals(object,contrastive);
+        } else if (contrastive instanceof Integer) {
+            object=Integer.valueOf(JsonHelper.getValue(body,position).toString());
+            Assert.assertEquals(object,contrastive);
+        } else if (contrastive instanceof Double) {
+            object=Double.valueOf(JsonHelper.getValue(body,position).toString());
+            Assert.assertEquals(object,contrastive);
+        } else if (contrastive instanceof Float) {
+            object=Float.valueOf(JsonHelper.getValue(body,position).toString());
+            Assert.assertEquals(object,contrastive);
+        } else{
+            object=JsonHelper.getValue(body,position);
+            Assert.assertEquals(object,contrastive);
+        }
+        log.info("获取返回json中" + position + "的值为：" + object + "\t对比值为:" + contrastive);
+        return this;
+    }
+
+    public Object getValueFromBody(String position) {
+        return JsonHelper.getValue(body,position);
+    }
 
 }
