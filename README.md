@@ -16,6 +16,9 @@
   2、直接编写get或post请求的代码（暂时只支持get和post）<br>
     实例：<br>
     ```Java
-    @Test(description = "注册，测试get")
     public void register() {
+    
+      get("url","params");
+      
+    }
     ```
