@@ -1,7 +1,7 @@
 # FX_Ucenter
 使用模式
 ===
-框架分为两种使用模式
+####框架分为两种使用模式
 一、测试数据驱动方法
 ---
   1、新建数据库并将数据库文件uc.sql导入
@@ -20,3 +20,4 @@
     public void register() {
         get("http://ucms.test.faxuan.net/ucds/ucenter/registerUser.do","userAccount=lkassd8513;userPassword=ceshi123;userPhone=18860702903;sysCode=KF01").body("code",200).body("msg","操作成功！");
     }
+    ` ``
