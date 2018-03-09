@@ -15,19 +15,11 @@
   1、静态导入Http类，使用import static net.faxuan.interfaceframework.core.Http.*<br>
   2、直接编写get或post请求的代码（暂时只支持get和post）<br>
     实例：<br>
-Basic form:
-
-```ruby
-require 'github/markup'
-
-GitHub::Markup.render('README.markdown', "* One\n* Two")
-```
 ```Java
-@Test(description = "注册，测试get")
 
-public void register() {
+public void test() {
 
-  get("http://ucms.test.faxuan.net/ucds/ucenter/registerUser.do","userAccount=lka8sd8513;userPassword=ceshi123;userPhone=18965302903;sysCode=KF01").body("code",200).body("msg","操作成功！");
+  get("http://www.baidu.com/request.do","a=1;b=2;c=3;d=4");
 
 }
 ```
