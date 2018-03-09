@@ -1,8 +1,6 @@
 # FX_Ucenter
-使用模式
-===
-框架分为两种使用模式<br>
-一、测试数据驱动方法
+
+测试数据驱动方法
 ---
   1、新建数据库并将数据库文件uc.sql导入<br>
   2、按照‘uc数据导入模板.xslx’文件编辑测试数据<br>
@@ -10,7 +8,7 @@
   4、修改testNG.xml文件中的数据库链接方式<br>
   5、运行testNG.xml文件执行测试<br>
   
-二、手动编写
+手动编写
 ---
   1、静态导入Http类，使用import static net.faxuan.interfaceframework.core.Http.*<br>
   -----------
