@@ -60,6 +60,6 @@ get(URL,Params).body("lotto.lottoId",5);
 ```
 验证多个值
 ```Java
-get(URL,Params).body("lotto.lottoId=5;lotto.winners.winnerId=23");
+get(URL,Params).body("lotto.lottoId=5;lotto.winners[1].winnerId=23");
 
 ```
