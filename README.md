@@ -22,11 +22,12 @@ require 'github/markup'
 
 GitHub::Markup.render('README.markdown', "* One\n* Two")
 ```
-    
-    ```Java
-    public void register() {
-    
-      get("url","params");
-      
-    }
-    ```
+```Java
+@Test(description = "注册，测试get")
+
+public void register() {
+
+get("http://ucms.test.faxuan.net/ucds/ucenter/registerUser.do","userAccount=lka8sd8513;userPassword=ceshi123;userPhone=18965302903;sysCode=KF01").body("code",200).body("msg","操作成功！");
+
+}
+```
