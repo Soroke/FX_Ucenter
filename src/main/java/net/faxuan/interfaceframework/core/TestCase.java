@@ -58,6 +58,7 @@ System.out.println(url + user + pwd);
         boolean b = false;
         try {
             content.isEmpty();
+
         } catch (NullPointerException npe) {
             b = true;
         }

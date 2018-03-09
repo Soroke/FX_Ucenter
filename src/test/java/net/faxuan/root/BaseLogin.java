@@ -19,6 +19,25 @@ public class BaseLogin {
     private static String loginSystemCode;
     private static String TOKEN;
 
+    public static UserLoginInfo signIn(String userInfo) {
+        UserLoginInfo userLoginInfo = null;
+        String[] user = userInfo.split(";");
+        switch (user.length) {
+            case 3:
+                userLoginInfo = signIn(user[0],user[1],user[2]);
+                break;
+            case 4:
+                userLoginInfo = signIn(user[0],user[1],Integer.valueOf(user[2]),user[3]);
+                break;
+            case 5:
+                userLoginInfo = signIn(user[0],user[1],Integer.valueOf(user[2]),user[3],user[4]);
+                break;
+            default:
+                System.err.println("登录信息:" + userInfo + "不正确，请检查您导入数据的正确性");
+        }
+        return userLoginInfo;
+    }
+
     public static UserLoginInfo signIn(String userName, String password, String systemCode) {
         return loginSystem(userName,password,1,systemCode,systemCode);
     }

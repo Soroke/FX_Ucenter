@@ -16,30 +16,21 @@ public class UcenterTest extends TestCase{
 
     @Test(dataProvider = "getData")
     public void currency(String description,String precondition,String validation,String url,String params) {
+        //打印测试描述log
         log.info(description);
+        //检查预置条件是否为空
         if (isNull(precondition)) {
+            //为空直接调用接口请求并验证返回
             get(url,params).body(validation);
         } else {
-            String[] loginfo = precondition.split(";");
-            switch (loginfo.length) {
-                case 3:
-                    BaseLogin.signIn(loginfo[0],loginfo[1],loginfo[2]);
-                    break;
-                case 4:
-                    BaseLogin.signIn(loginfo[0],loginfo[1],Integer.valueOf(loginfo[2]),loginfo[3]);
-                    break;
-                case 5:
-                    BaseLogin.signIn(loginfo[0],loginfo[1],Integer.valueOf(loginfo[2]),loginfo[3],loginfo[4]);
-                    break;
-                default:
-                    System.err.println("登录信息有误！");
-            }
+            /**
+             * 不为空先使用预置条件中的登录信息登录
+             * 然后调用接口请求并验证返回
+             * 最后退出登录用户
+             */
+            BaseLogin.signIn(precondition);
             get(url,params).body(validation);
             BaseLogin.signOut();
         }
     }
-
-
-
-
 }

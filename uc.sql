@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50721
 File Encoding         : 65001
 
-Date: 2018-03-07 17:55:13
+Date: 2018-03-09 10:58:20
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -35,8 +35,8 @@ CREATE TABLE `datas` (
   `method_id` int(11) NOT NULL COMMENT '方法ID',
   `url` varchar(255) NOT NULL COMMENT '接口url',
   `params` varchar(255) NOT NULL COMMENT '参数',
-  `precondition` varchar(255) DEFAULT NULL COMMENT '前置条件(是否需要登录)',
-  `expected_results` int(11) NOT NULL COMMENT '预期结果',
+  `precondition` varchar(255) DEFAULT NULL COMMENT '前置条件',
+  `expected_results` varchar(255) NOT NULL COMMENT '预期结果',
   `actual_results` varchar(255) DEFAULT NULL COMMENT '实际结果',
   `description` varchar(255) DEFAULT NULL COMMENT '测试功能描述',
   PRIMARY KEY (`id`),
