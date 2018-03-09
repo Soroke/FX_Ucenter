@@ -124,6 +124,9 @@ public class Http {
     public static Response get(String url,String params) {
         Map<Object,Object> paramsN = new HashMap<Object,Object>();
         String[] pam = params.split(";");
+        if (pam.length == 1) {
+            pam = params.split("&");
+        }
         for (String p:pam) {
             String pp[] = p.split("=");
             paramsN.put(pp[0],pp[1]);

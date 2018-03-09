@@ -15,10 +15,10 @@ public class UcenterTest extends TestCase{
     private Logger log = Logger.getLogger(this.getClass());
 
     @Test(dataProvider = "getData")
-    public void currency(String description,String precondition,int result,String url,String params) {
+    public void currency(String description,String precondition,String validation,String url,String params) {
         log.info(description);
         if (isNull(precondition)) {
-            get(url,params).body("code",result);
+            get(url,params).body(validation);
         } else {
             String[] loginfo = precondition.split(";");
             switch (loginfo.length) {
@@ -34,7 +34,7 @@ public class UcenterTest extends TestCase{
                 default:
                     System.err.println("登录信息有误！");
             }
-            get(url,params).body("code",result);
+            get(url,params).body(validation);
             BaseLogin.signOut();
         }
     }

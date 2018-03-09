@@ -12,9 +12,10 @@ import org.testng.annotations.Test;
  */
 public class Code {
 
+
     @Test(description = "注册，测试get")
     public void register() {
-        get("http://ucms.test.faxuan.net/ucds/ucenter/registerUser.do","userAccount=lkassd8513;userPassword=ceshi123;userPhone=18860702903;sysCode=KF01").body("code",200).body("msg","操作成功！");
+        get("http://ucms.test.faxuan.net/ucds/ucenter/registerUser.do","userAccount=lka8sd8513;userPassword=ceshi123;userPhone=18965302903;sysCode=KF01").body("code",200).body("msg","操作成功！");
     }
 
     @Test(description = "刷新，测试登录状态下的接口操作，测试post")
@@ -23,4 +24,5 @@ public class Code {
         post("http://ucenter.test.faxuan.net/rzds/ucenter/refreshtUser.do","sysCode=KF01").body("code",200).body("data.token",userLoginInfo.getToken());
         BaseLogin.signOut();
     }
+
 }

@@ -159,10 +159,32 @@ public class Response{
             object=JsonHelper.getValue(body,position);
             Assert.assertEquals(object,contrastive);
         }
-        log.info("获取返回json中" + position + "的值为：" + object + "\t对比值为:" + contrastive);
+//log.info("获取返回json中" + position + "的值为：" + object + "\t对比值为:" + contrastive);
         return this;
     }
 
+    /**
+     * 解析验证json返回中的多个值
+     * @param validationItem
+     * @return 本身
+     */
+    public Response body(String validationItem) {
+        String[] options = validationItem.split(";");
+        for (String option:options) {
+            String[] contrast = option.split("=");
+            String obj = JsonHelper.getValue(body,contrast[0]).toString();
+            Assert.assertEquals(obj,contrast[1]);
+            log.info("获取返回json中" + contrast[0] + "的值为：" + obj + "\t对比值为:" + contrast[1]);
+        }
+
+        return this;
+    }
+
+    /**
+     * 根据传入参数获取指定的值
+     * @param position
+     * @return
+     */
     public Object getValueFromBody(String position) {
         return JsonHelper.getValue(body,position);
     }

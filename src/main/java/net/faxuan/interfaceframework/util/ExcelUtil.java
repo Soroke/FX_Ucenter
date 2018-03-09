@@ -65,7 +65,7 @@ public class ExcelUtil {
                             .append(" , 测试url : ").append(URLCell.getStringCellValue())
                             .append(" , 参数 : ").append(paramCell.getStringCellValue())
                             .append(" , 前置条件 : ").append(preconditionCell.getStringCellValue())
-                            .append(" , 预期结果code : ").append(expectedResultCell.getNumericCellValue())
+                            .append(" , 预期结果 : ").append(expectedResultCell.getStringCellValue())
                             .append(" , 测试功能描述 : ").append(descriptionCell.getStringCellValue());
                 } catch (NullPointerException npe) {
                     preconditionIsNull = true;
@@ -76,7 +76,7 @@ public class ExcelUtil {
                             .append(" , 测试url : ").append(URLCell.getStringCellValue())
                             .append(" , 参数 : ").append(paramCell.getStringCellValue())
                             .append(" , 前置条件 : ").append("无")
-                            .append(" , 预期结果code : ").append(expectedResultCell.getNumericCellValue())
+                            .append(" , 预期结果 : ").append(expectedResultCell.getStringCellValue())
                             .append(" , 测试功能描述 : ").append(descriptionCell.getStringCellValue());
                 }
 
@@ -95,10 +95,10 @@ public class ExcelUtil {
                 rs1.last();
                 if (rs1.getRow() <= 0) {
                     if (preconditionIsNull) {
-                        sql.insertSQL("INSERT INTO datas(method_id,url,params,expected_results,description) VALUES((SELECT id FROM methods WHERE case_id=(SELECT id FROM cases WHERE name='" + classNameCell + "') AND method_name='" + methodNameCell + "'),'" + URLCell + "','" + paramCell +"'," + expectedResultCell +",'" + descriptionCell +"');");
+                        sql.insertSQL("INSERT INTO datas(method_id,url,params,expected_results,description) VALUES((SELECT id FROM methods WHERE case_id=(SELECT id FROM cases WHERE name='" + classNameCell + "') AND method_name='" + methodNameCell + "'),'" + URLCell + "','" + paramCell +"','" + expectedResultCell +"','" + descriptionCell +"');");
                         System.out.println(employeeInfoBuilder.toString()+ "----->导入成功");
                     } else {
-                        sql.insertSQL("INSERT INTO datas(method_id,url,params,expected_results,description,precondition) VALUES((SELECT id FROM methods WHERE case_id=(SELECT id FROM cases WHERE name='" + classNameCell + "') AND method_name='" + methodNameCell + "'),'" + URLCell + "','" + paramCell +"'," + expectedResultCell +",'" + descriptionCell +"','" + preconditionCell +"');");
+                        sql.insertSQL("INSERT INTO datas(method_id,url,params,expected_results,description,precondition) VALUES((SELECT id FROM methods WHERE case_id=(SELECT id FROM cases WHERE name='" + classNameCell + "') AND method_name='" + methodNameCell + "'),'" + URLCell + "','" + paramCell +"','" + expectedResultCell +"','" + descriptionCell +"','" + preconditionCell +"');");
                         System.out.println(employeeInfoBuilder.toString()+ "----->导入成功");
                     }
                 } else System.err.println(employeeInfoBuilder.toString()+ "----->数据已存在");
