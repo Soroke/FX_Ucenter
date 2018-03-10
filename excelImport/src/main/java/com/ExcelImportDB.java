@@ -26,10 +26,14 @@ public class ExcelImportDB extends JFrame{
     public void CreatJFrame(){
         JFrame jf=new JFrame("Excel数据导入数据库");
         GridLayout gy =new GridLayout(8,0);
-        jf.setSize(400,300);
-        jf.setLocation(400,100);
+        jf.setSize(400,400);
+        jf.setLocation(400,200);
         jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         jf.setLayout(gy);
+        jf.setResizable(false);
+
+        ImageIcon icon=new ImageIcon(this.getClass().getResource("/ex.png")); //图片和项目同一路径，故不用图片的路径
+        jf.setIconImage(icon.getImage());
 
         button1.addActionListener(new ButtonHandler1());
         button2.addActionListener(new ButtonHandler2());
@@ -39,7 +43,7 @@ public class ExcelImportDB extends JFrame{
         JLabel jl_dbPort = new JLabel("端   口   号:");
         JLabel jl_dbName = new JLabel("数据库名称:");
         JLabel jl_dbUser = new JLabel("用户名:");
-        JLabel jl_dbPassword = new JLabel("密  码:");
+        JLabel jl_dbPassword = new JLabel("密    码:");
 
         JPanel jPanelexcel = new JPanel();
         jPanelexcel.add(jl_excelLocation);
@@ -80,6 +84,7 @@ public class ExcelImportDB extends JFrame{
         jf.add(jPanel5);
         jf.add(jPanel6);
         jf.add(jPanel7);
+
 
         jf.setVisible(true);
     }
