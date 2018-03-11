@@ -74,6 +74,7 @@ public class ExcelImportDB extends JFrame{
         jPanel6.add(button2);
 
         JPanel jPanel7 = new JPanel();
+        info.setForeground(Color.red);
         jPanel7.add(info);
 
         jf.add(jPanelexcel);
@@ -106,18 +107,22 @@ public class ExcelImportDB extends JFrame{
                  switch (i) {
                      case 0:
                          info.setText("导入成功");
+                         info.setForeground(Color.green);
                          break;
                      case 1:
                          info.setText("数据库连接信息输入错误");
+                         info.setForeground(Color.red);
                          break;
                      case 2:
                          info.setText("Excel文件地址输入错误");
+                         info.setForeground(Color.red);
                          break;
                  }
             } else {
                 info.setText("请输入正确的数据连接地址和文件地址");
+                info.setForeground(Color.red);
             }
-            System.out.println("Excel位置：" + excelLocation.getText().trim() + "\n数据库地址："  + dbURL.getText().trim() + "\n数据库端口号："  + dbPort.getText().trim() + "\n数据库名称："  + dbName.getText().trim() + "\n数据库用户名："  + dbUser.getText().trim() + "\n数据库用户密码："  + dbPassword.getText().trim());
+//System.out.println("Excel位置：" + excelLocation.getText().trim() + "\n数据库地址："  + dbURL.getText().trim() + "\n数据库端口号："  + dbPort.getText().trim() + "\n数据库名称："  + dbName.getText().trim() + "\n数据库用户名："  + dbUser.getText().trim() + "\n数据库用户密码："  + dbPassword.getText().trim());
         }
     }
 
