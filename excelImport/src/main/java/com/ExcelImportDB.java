@@ -27,7 +27,7 @@ public class ExcelImportDB extends JFrame{
         JFrame jf=new JFrame("Excel数据导入数据库");
         GridLayout gy =new GridLayout(8,0);
         jf.setSize(400,400);
-        jf.setLocation(400,200);
+        jf.setLocation(450,180);
         jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         jf.setLayout(gy);
         jf.setResizable(false);

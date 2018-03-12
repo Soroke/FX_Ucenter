@@ -213,8 +213,10 @@ public class Mysql {
      */
     public Object[][] getData(String ClassName,String method){
         connSQL();
-        String getGroupLength = "SELECT COUNT(*) count FROM datas WHERE method_id = ( SELECT id FROM methods WHERE case_id = ( SELECT id FROM cases WHERE `name` = '"+ ClassName + "' ) AND method_name = '" + method + "' )";
-        String getGroup = "SELECT * FROM datas WHERE method_id = ( SELECT id FROM methods WHERE case_id = ( SELECT id FROM cases WHERE `name` = '"+ ClassName + "' ) AND method_name = '" + method + "' )";
+        String getGroupLength = "SELECT COUNT(*) count FROM datas WHERE case_id = ( SELECT id FROM cases WHERE case_name='"+ ClassName + "' AND method_name = '" + method + "' )";
+        String getGroup = "SELECT *  FROM datas WHERE case_id = ( SELECT id FROM cases WHERE case_name='"+ ClassName + "' AND method_name = '" + method + "' )";
+
+        System.out.println(getGroupLength);
         ResultSet rs1 = selectSQL(getGroupLength);
         ResultSet rs2 = selectSQL(getGroup);
         Object obj[][] = null;

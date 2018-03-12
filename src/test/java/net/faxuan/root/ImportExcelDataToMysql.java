@@ -10,6 +10,6 @@ import org.testng.annotations.Test;
 public class ImportExcelDataToMysql {
     @Test
     public void insertData() {
-        ExcelUtil.importExcelData("D:/uc.xlsx","127.0.0.1","3306","uuu","root","123123");
+        ExcelUtil.importExcelData("C:/Users/song/Desktop/uc.xlsx","127.0.0.1","3306","uuu","root","123123");
     }
 }
