@@ -71,3 +71,4 @@ CREATE TABLE `system` (
 -- Records of system
 -- ----------------------------
 INSERT INTO `system` VALUES ('1', '用户中心', 'UCenter');
+INSERT INTO `system` VALUES ('2', '销账系统', 'Sale');
