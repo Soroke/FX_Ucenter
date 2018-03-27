@@ -99,7 +99,7 @@ public class Mysql {
     boolean deleteSQL(String sql) {
         try {
             statement = conn.prepareStatement(sql);
-            statement.executeUpdate();
+            statement.execute();
             return true;
         } catch (SQLException e) {
             System.out.println("插入数据库时出错：");
