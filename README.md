@@ -12,7 +12,10 @@
 
   4、修改testNG.xml文件中的数据库链接方式
 
-  5、运行testNG.xml文件执行测试
+  5、运行maven命令执行测试
+  ```
+  mvn clean install
+  ```
 
   6、同样使用工具[excelImport.jar](https://github.com/Soroke/FX_Ucenter/releases/download/1.1.0/excelImport.jar)，输入系统ID将数据库中的测试数据删除
 
