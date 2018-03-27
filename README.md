@@ -10,7 +10,6 @@
   5、运行testNG.xml文件执行测试<br>
   6、同样使用工具[excelImport.jar](https://github.com/Soroke/FX_Ucenter/releases/download/1.1.0/excelImport.jar)，输入系统ID将数据库中的测试数据删除<br>
   ```
-  <br>
 手动编写
 ---
   1、静态导入Http类，使用import static net.faxuan.interfaceframework.core.Http.*<br>
