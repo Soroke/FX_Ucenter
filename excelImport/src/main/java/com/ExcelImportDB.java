@@ -40,8 +40,8 @@ public class ExcelImportDB extends JFrame {
     public void CreatJFrame() {
         JFrame jf = new JFrame("导入或删除数据库的测试数据");
         GridLayout gy = new GridLayout(17, 0);
-        jf.setSize(400, 560);
-        jf.setLocation(450, 100);
+        jf.setSize(400, 600);
+        jf.setLocation(500, 50);
         jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         jf.setLayout(gy);
         jf.setResizable(false);
