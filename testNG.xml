@@ -3,9 +3,9 @@
 
 <suite name="接口测试" verbose="1">
     <!-- 测试数据存放地址 -->
-    <parameter name="mysql_url" value="jdbc:mysql://127.0.0.1:3306/uuu?useSSL=true&amp;characterEncoding=UTF-8" />
+    <parameter name="mysql_url" value="jdbc:mysql://27.221.58.101:3308/qa_apiframetest?useSSL=true&amp;characterEncoding=UTF-8" />
     <parameter name="mysql_user" value="root" />
-    <parameter name="mysql_pwd" value="123123" />
+    <parameter name="mysql_pwd" value="xfDB_xntest.223" />
 
     <test name="用户中心接口测试(数据驱动)">
         <classes>
@@ -16,6 +16,12 @@
     <test name="用户中心接口测试(代码验证)">
         <classes>
             <class name="net.faxuan.ucenter.Code"/>
+        </classes>
+    </test>
+
+    <test name="销账系统接口测试(数据驱动)">
+        <classes>
+            <class name="net.faxuan.ucenter.SalesTest"/>
         </classes>
     </test>
 

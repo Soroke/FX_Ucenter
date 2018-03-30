@@ -12,14 +12,20 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.client.params.CookiePolicy;
+import org.apache.http.client.params.HttpClientParams;
+import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.cookie.BasicClientCookie;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.apache.log4j.Logger;
 
+import java.awt.*;
 import java.io.IOException;
 import java.util.*;
+import java.util.List;
 
 import static org.apache.commons.codec.Charsets.UTF_8;
 
@@ -64,7 +70,7 @@ public class Http {
      * @param httpRequestBase
      *      http的对象例如 HttpGet、HttpPost
      */
-    public static void addHeaderToHttpRequest(HttpRequestBase httpRequestBase) {
+    private static void addHeaderToHttpRequest(HttpRequestBase httpRequestBase) {
         if(!headers.isEmpty()) {
             for(Map.Entry<Object, Object> entry : headers.entrySet()){
                 httpRequestBase.addHeader(entry.getKey().toString(), entry.getValue().toString());
@@ -72,12 +78,22 @@ public class Http {
         }
     }
 
+    public static void setHeader(String key,String value) {
+        Map<Object,Object> hh = new HashMap<Object, Object>();
+        hh.put(key,value);
+        setHeader(hh);
+    }
+
+    public static void setHeader(Map<Object,Object> header) {
+        headers = header;
+    }
+
     /**
      * 设置cookies
-     * @param cookieStore
+     * @param cookieStore1
      */
-    public static void setCookieStore(CookieStore cookieStore) {
-        cookieStore = cookieStore;
+    public static void setCookieStore(CookieStore cookieStore1) {
+        cookieStore = cookieStore1;
     }
 
     /**
@@ -113,7 +129,12 @@ public class Http {
      * @return
      */
     public static Response get(String url,Map<Object,Object> ... params) {
-        return getRealization(url,params[0]);
+        if (params.length == 0) {
+            return getRealization(url);
+        } else {
+            return getRealization(url,params[0]);
+        }
+
     }
     /**
      * get请求的传参
@@ -147,8 +168,10 @@ public class Http {
      *      响应时间
      */
     public static Response getRealization(String url,Map<Object,Object> ... params) {
+
         if (cookieStore == null)  cookieStore = new BasicCookieStore();
         HttpClient httpClient =  HttpClientBuilder.create().setDefaultRequestConfig(config).setDefaultCookieStore(cookieStore).build();
+
         String baseUrl = url;
         //请求返回实体对象
         Response rsp = new Response();

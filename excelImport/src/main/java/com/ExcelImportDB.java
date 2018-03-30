@@ -6,25 +6,32 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.io.File;
 
 /**
  * Created by song on 18/3/26.
  */
 public class ExcelImportDB extends JFrame {
 
-    JTextField excelLocation = new JTextField(25);
+    JTextField excelLocation = new JTextField(20);
     JTextField dbURL = new JTextField(20);
     JTextField dbPort = new JTextField(20);
     JTextField dbName = new JTextField(20);
     JTextField dbUser = new JTextField(15);
     JTextField dbPassword = new JTextField(15);
     JTextField systemID = new JTextField(5);
+    JTextField jtFiddler = new JTextField(20);
+    JTextField jtExcel = new JTextField(20);
     JLabel info = new JLabel();
     JLabel dbConnectTestInfo = new JLabel();
     JLabel delInfo = new JLabel();
     JButton button1 = new JButton("导入数据");
+    JButton chooseButton = new JButton("选择Excel文件");
     JButton delButton = new JButton("删除数据");
     JButton connectTest = new JButton("连接测试");
+    JButton fiddlerButton = new JButton(" 选择fiddler导出文件  ");
+    JButton excelButton = new JButton("选择导出excel文件夹");
+    JButton convert = new JButton("转换");
 
     /**
      * 默认信息
@@ -39,9 +46,9 @@ public class ExcelImportDB extends JFrame {
 
     public void CreatJFrame() {
         JFrame jf = new JFrame("导入或删除数据库的测试数据");
-        GridLayout gy = new GridLayout(17, 0);
-        jf.setSize(400, 600);
-        jf.setLocation(500, 50);
+        GridLayout gy = new GridLayout(21, 0);
+        jf.setSize(400, 700);
+        jf.setLocation(500, 20);
         jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         jf.setLayout(gy);
         jf.setResizable(false);
@@ -50,8 +57,9 @@ public class ExcelImportDB extends JFrame {
         jf.setIconImage(icon.getImage());
 
         button1.addActionListener(new ButtonHandler1());
-        connectTest.addActionListener(new connectTestHandler());
-        delButton.addActionListener(new delDataHandler());
+        connectTest.addActionListener(new ConnectTestHandler());
+        delButton.addActionListener(new DelDataHandler());
+        chooseButton.addActionListener(new ChooseButtonListener());
         JLabel jl_firstline = new JLabel("====================配置数据库连接====================");
         JLabel jl_excelLocation = new JLabel("  Excel本地位置:");
         JLabel jl_dbURL = new JLabel("数据库地址:");
@@ -61,6 +69,7 @@ public class ExcelImportDB extends JFrame {
         JLabel jl_dbPassword = new JLabel("密    码:");
         JLabel jl_insline = new JLabel("======================数据导入======================");
         JLabel jl_delline = new JLabel("======================数据删除======================");
+        JLabel jl_fiddlerline = new JLabel("========解析fiddler导出文件并生成为指定的excel========");
         JLabel jl_delSystemId = new JLabel("需要删除测试数据的系统ID");
         JLabel warning = new JLabel("谨慎操作，删除前请确认信息，操作不可逆!!!!");
 
@@ -113,11 +122,13 @@ public class ExcelImportDB extends JFrame {
         insLine.add(jl_insline);
 
         JPanel jPanelexcel = new JPanel();
-        jPanelexcel.add(jl_excelLocation);
+        jPanelexcel.add(chooseButton);
+//        jPanelexcel.add(jl_excelLocation);
+        excelLocation.setEditable(false);
         jPanelexcel.add(excelLocation);
-        excelLocation.setForeground(Color.GRAY);
-        excelLocation.setText(excel);
-        excelLocation.addFocusListener(new MyFocusListener(excel, excelLocation));
+//        excelLocation.setForeground(Color.GRAY);
+//        excelLocation.setText(excel);
+//        excelLocation.addFocusListener(new MyFocusListener(excel, excelLocation));
 
         JPanel jPanel6 = new JPanel();
         jPanel6.add(button1);
@@ -146,6 +157,22 @@ public class ExcelImportDB extends JFrame {
         JPanel delectInfo = new JPanel();
         delectInfo.add(delInfo);
 
+        JPanel fiddlerLine = new JPanel();
+        fiddlerLine.add(jl_fiddlerline);
+
+        JPanel fiddlerChoose = new JPanel();
+        fiddlerChoose.add(fiddlerButton);
+        jtFiddler.setEditable(false);
+        fiddlerChoose.add(jtFiddler);
+
+        JPanel excelChoose = new JPanel();
+        excelChoose.add(excelButton);
+        jtExcel.setEditable(false);
+        excelChoose.add(jtExcel);
+
+        JPanel jpconvert = new JPanel();
+        jpconvert.add(convert);
+
 
         jf.add(firstLine);
         jf.add(jPanel1);
@@ -164,7 +191,10 @@ public class ExcelImportDB extends JFrame {
         jf.add(jPanel10);
         jf.add(jPanel11);
         jf.add(delectInfo);
-
+        jf.add(fiddlerLine);
+        jf.add(fiddlerChoose);
+        jf.add(excelChoose);
+        jf.add(jpconvert);
 
         jf.setVisible(true);
     }
@@ -175,9 +205,35 @@ public class ExcelImportDB extends JFrame {
 
 
     /**
+     * 选择框按钮监听
+     */
+    class ChooseButtonListener implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            JFileChooser jfc=new JFileChooser();
+            jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+            jfc.showDialog(new JLabel(), "选择");
+            File file=jfc.getSelectedFile();
+            if(file.isDirectory()){
+                System.out.println("文件夹:"+file.getAbsolutePath());
+            }else if(file.isFile()){
+                String filePath = file.getAbsolutePath();
+                String extension = filePath.split("\\.")[1];
+                if (extension.equals("xlsx") || extension.equals("xls")) {
+                    excelLocation.setForeground(Color.BLACK);
+                    excelLocation.setText(filePath);
+                    info.setText("");
+                } else {
+                    excelLocation.setForeground(Color.MAGENTA);
+                    excelLocation.setText("请选择指定的EXCEL文件。");
+                }
+//System.out.println("选择文件:"+file.getAbsolutePath());
+            }
+        }
+    }
+    /**
      * 测试连接按钮
      */
-    class connectTestHandler implements ActionListener {
+    class ConnectTestHandler implements ActionListener {
 
         public void actionPerformed(ActionEvent e) {
             //事件处理器
@@ -257,7 +313,7 @@ public class ExcelImportDB extends JFrame {
     /**
      * 删除数据按钮
      */
-    class delDataHandler implements ActionListener {
+    class DelDataHandler implements ActionListener {
 
         public void actionPerformed(ActionEvent e) {
             //事件处理器

@@ -6,6 +6,7 @@ import org.apache.http.client.CookieStore;
 import org.apache.log4j.Logger;
 import org.testng.Assert;
 
+import java.awt.*;
 import java.util.Map;
 
 /**

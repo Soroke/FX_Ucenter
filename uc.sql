@@ -33,6 +33,7 @@ CREATE TABLE `cases` (
 -- Records of cases
 -- ----------------------------
 INSERT INTO `cases` VALUES ('1', '1', 'net.faxuan.ucenter.UcenterTest', 'currency');
+INSERT INTO `cases` VALUES ('2', '2', 'net.faxuan.ucenter.SalesTest', 'currency');
 
 -- ----------------------------
 -- Table structure for `datas`
@@ -71,4 +72,4 @@ CREATE TABLE `system` (
 -- Records of system
 -- ----------------------------
 INSERT INTO `system` VALUES ('1', '用户中心', 'UCenter');
-INSERT INTO `system` VALUES ('2', '销账系统', 'Sale');
+INSERT INTO `system` VALUES ('2', '销账系统', 'Sales');
