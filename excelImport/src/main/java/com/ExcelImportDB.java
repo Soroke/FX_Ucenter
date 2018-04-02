@@ -20,11 +20,12 @@ public class ExcelImportDB extends JFrame {
     JTextField dbUser = new JTextField(15);
     JTextField dbPassword = new JTextField(15);
     JTextField systemID = new JTextField(5);
-    JTextField jtFiddler = new JTextField(20);
-    JTextField jtExcel = new JTextField(20);
+    JTextField jtFiddler = new JTextField(15);
+    JTextField jtExcel = new JTextField(15);
     JLabel info = new JLabel();
     JLabel dbConnectTestInfo = new JLabel();
     JLabel delInfo = new JLabel();
+    JLabel convertInfo = new JLabel();
     JButton button1 = new JButton("导入数据");
     JButton chooseButton = new JButton("选择Excel文件");
     JButton delButton = new JButton("删除数据");
@@ -46,9 +47,9 @@ public class ExcelImportDB extends JFrame {
 
     public void CreatJFrame() {
         JFrame jf = new JFrame("导入或删除数据库的测试数据");
-        GridLayout gy = new GridLayout(21, 0);
-        jf.setSize(400, 700);
-        jf.setLocation(500, 20);
+        GridLayout gy = new GridLayout(22, 0);
+        jf.setSize(400, 720);
+        jf.setLocation(500, 5);
         jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         jf.setLayout(gy);
         jf.setResizable(false);
@@ -60,6 +61,9 @@ public class ExcelImportDB extends JFrame {
         connectTest.addActionListener(new ConnectTestHandler());
         delButton.addActionListener(new DelDataHandler());
         chooseButton.addActionListener(new ChooseButtonListener());
+        fiddlerButton.addActionListener(new ChooseFiddlerFileButtonListener());
+        excelButton.addActionListener(new ChooseExcelDirectoryButtonListener());
+        convert.addActionListener(new ConvertButtonListener());
         JLabel jl_firstline = new JLabel("====================配置数据库连接====================");
         JLabel jl_excelLocation = new JLabel("  Excel本地位置:");
         JLabel jl_dbURL = new JLabel("数据库地址:");
@@ -173,6 +177,9 @@ public class ExcelImportDB extends JFrame {
         JPanel jpconvert = new JPanel();
         jpconvert.add(convert);
 
+        JPanel convertInfo1 = new JPanel();
+        convertInfo1.add(convertInfo);
+
 
         jf.add(firstLine);
         jf.add(jPanel1);
@@ -195,6 +202,7 @@ public class ExcelImportDB extends JFrame {
         jf.add(fiddlerChoose);
         jf.add(excelChoose);
         jf.add(jpconvert);
+        jf.add(convertInfo1);
 
         jf.setVisible(true);
     }
@@ -203,9 +211,32 @@ public class ExcelImportDB extends JFrame {
         new ExcelImportDB().CreatJFrame();
     }
 
+    /**
+     * 转换按钮
+     */
+    class ConvertButtonListener implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            if (jtFiddler.getText().trim() == null || jtExcel.getText().trim().equals("")) {
+                convertInfo.setForeground(Color.RED);
+                convertInfo.setText("fiddler文件和excel输出文件夹不能为空");
+                return;
+            }
+
+            String outExcelFile = jtExcel.getText().trim() + "\\apiInfo.xlsx";
+            try {
+                AnalysisFiddlerOutFile.writeToExcel(outExcelFile,jtFiddler.getText().trim());
+            } catch (Exception e1) {
+                convertInfo.setForeground(Color.RED);
+                convertInfo.setText("转换失败");
+                e1.printStackTrace();
+            }
+            convertInfo.setForeground(Color.GREEN);
+            convertInfo.setText("转换完成，文件为：" + outExcelFile);
+        }
+    }
 
     /**
-     * 选择框按钮监听
+     * 选择excel文件按钮监听
      */
     class ChooseButtonListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
@@ -221,6 +252,7 @@ public class ExcelImportDB extends JFrame {
                 if (extension.equals("xlsx") || extension.equals("xls")) {
                     excelLocation.setForeground(Color.BLACK);
                     excelLocation.setText(filePath);
+                    System.out.println("导入数据库excel文件路径为:" + file.getAbsolutePath());
                     info.setText("");
                 } else {
                     excelLocation.setForeground(Color.MAGENTA);
@@ -230,6 +262,52 @@ public class ExcelImportDB extends JFrame {
             }
         }
     }
+
+    /**
+     * 选择fiddler导出文件按钮监听
+     */
+    class ChooseFiddlerFileButtonListener implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            JFileChooser fiddler = new JFileChooser();
+            fiddler.showDialog(new JLabel(), "选择");
+            fiddler.setFileSelectionMode(JFileChooser.FILES_ONLY);
+            File file=fiddler.getSelectedFile();
+            String filePath = file.getAbsolutePath();
+            String extension = filePath.split("\\.")[1];
+            if (extension.equals("txt") || extension.equals("TXT")) {
+                jtFiddler.setForeground(Color.BLACK);
+                jtFiddler.setText(filePath);
+                System.out.println("fiddler导出文件路径为:" + file.getAbsolutePath());
+            } else {
+                jtFiddler.setForeground(Color.MAGENTA);
+                jtFiddler.setText("请选择fiddler导出的TXT文件。");
+            }
+//System.out.println("选择文件:"+file.getAbsolutePath());
+        }
+    }
+
+    /**
+     * 选择excel文件导出路径按钮监听
+     */
+    class ChooseExcelDirectoryButtonListener implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            JFileChooser excelChoose = new JFileChooser();
+            excelChoose.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+            excelChoose.showDialog(new JLabel(), "选择");
+
+            File file=excelChoose.getSelectedFile();
+            if(file.isDirectory()) {
+                String filePath = file.getAbsolutePath();
+                jtExcel.setForeground(Color.BLACK);
+                jtExcel.setText(filePath);
+                System.out.println("excel导出文件夹选择为:" + file.getAbsolutePath());
+            } else {
+                jtExcel.setForeground(Color.MAGENTA);
+                jtExcel.setText("请选择文件夹。");
+            }
+        }
+    }
+
     /**
      * 测试连接按钮
      */

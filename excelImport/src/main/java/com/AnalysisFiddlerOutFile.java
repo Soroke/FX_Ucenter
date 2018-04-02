@@ -16,7 +16,7 @@ import java.util.*;
  */
 public class AnalysisFiddlerOutFile {
 
-    private static String[] excelTitle = {"系统ID","前置条件(是否需要登录;不需要请留空)","测试url","参数(多个参数用英文分号隔开)","预期结果(接口返回状态码)","测试功能描述"};
+    private static String[] excelTitle = {"系统ID","前置条件(是否需要登录;不需要请留空)","测试url","参数(多个参数用英文分号隔开)","预期结果(接口返回状态码)","测试功能描述","接口类型"};
 
     private static HSSFWorkbook workbook = null;
     private static XSSFWorkbook xWorkbook = null;
@@ -24,12 +24,11 @@ public class AnalysisFiddlerOutFile {
 
     /**
      * 读取fiddler文件并解析，然后输出excel文件到指定目录
-     * @param filePathName 输出文件excel
-     * @param sheetName excel列名
+     * @param filePathName 输出文件excel所在文件夹
      * @param sourceFile fiddler导出文件
      */
-    public static void writeToExcel(String filePathName,String sheetName,String sourceFile) {
-        writeToExcel(filePathName,sheetName,sourceFile);
+    public static void writeToExcel(String filePathName,String sourceFile) throws Exception{
+        writeToExcel(filePathName,"接口信息",analysis(sourceFile));
     }
 
     /**
@@ -73,8 +72,8 @@ public class AnalysisFiddlerOutFile {
                         cell.setCellValue(apiInfo.getUrl());
                         cell = newRow.createCell(3);
                         cell.setCellValue(apiInfo.getParam());
-                        cell = newRow.createCell(5);
-                        cell.setCellValue(rowId+1);
+                        cell = newRow.createCell(6);
+                        cell.setCellValue(apiInfo.getApiType());
                     }
                 }
                 out = new FileOutputStream(filePathName);
@@ -200,7 +199,7 @@ public class AnalysisFiddlerOutFile {
 
 
     /**
-     * 解析文件
+     * 解析fiddler文件
      * @param filePath 文件path
      */
     private static List<APIInfo> analysis(String filePath) {
@@ -220,6 +219,7 @@ public class AnalysisFiddlerOutFile {
 
                 if (apiContentOneLine.contains("POST") || apiContentOneLine.contains("GET")) {
                     String[] urlInfo = apiContentOneLine.split(" ");
+                    apiInfo.setApiType(urlInfo[0]);
                     try {
                         String[] up = urlInfo[1].split("\\?");
                         up[1].length();
@@ -260,7 +260,7 @@ public class AnalysisFiddlerOutFile {
 
     /**
      *
-     * 将fiddler导出文件进行转换，fiddler导出文件中文和特殊字符都进行了URL编码。
+     * 将fiddler导出文件进行解码转换，fiddler导出文件中文和特殊字符都进行了URL编码。
      * @param sourceFilePath
      * @return
      */
@@ -317,6 +317,7 @@ public class AnalysisFiddlerOutFile {
     private static class APIInfo {
         private String url;
         private String param;
+        private String apiType;
 
         public String getUrl() {
             return url;
@@ -332,6 +333,14 @@ public class AnalysisFiddlerOutFile {
 
         public void setParam(String param) {
             this.param = param;
+        }
+
+        public String getApiType() {
+            return apiType;
+        }
+
+        public void setApiType(String apiType) {
+            this.apiType = apiType;
         }
 
         public String toString() {
