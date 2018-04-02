@@ -8,7 +8,7 @@
 
   2、按照‘uc数据导入模板.xslx’文件编辑测试数据
 
-  3、使用工具[excelImport.jar](https://github.com/Soroke/FX_Ucenter/releases/download/1.1.0/excelImport.jar)将编辑完成的测数据导入到数据库中
+  3、使用工具[excelImport.jar](https://github.com/Soroke/FX_Ucenter/releases)将编辑完成的测数据导入到数据库中
 
   4、修改testNG.xml文件中的数据库链接方式
 
@@ -17,7 +17,7 @@
   mvn clean install
   ```
 
-  6、同样使用工具[excelImport.jar](https://github.com/Soroke/FX_Ucenter/releases/download/1.1.0/excelImport.jar)，输入系统ID将数据库中的测试数据删除
+  6、同样使用工具[excelImport.jar](https://github.com/Soroke/FX_Ucenter/releases)，输入系统ID将数据库中的测试数据删除
 
 
 手动编写
