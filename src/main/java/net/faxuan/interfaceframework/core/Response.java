@@ -176,7 +176,7 @@ public class Response{
      * @return 本身
      */
     public Response body(String validationItem) {
-        System.out.println(validationItem);
+//System.out.println(validationItem);
         String[] key = validationItem.split("=");
         if (key[0].equals("body")) {
             bodyValue(validationItem);

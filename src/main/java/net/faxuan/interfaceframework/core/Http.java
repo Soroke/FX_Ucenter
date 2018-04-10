@@ -117,7 +117,14 @@ public class Http {
         String[] pam = params.split(";");
         for (String p:pam) {
             String pp[] = p.split("=");
-            paramsN.put(pp[0],pp[1]);
+            boolean b = true;
+            try {
+                pp[1].equals("");
+            } catch (ArrayIndexOutOfBoundsException e) {
+                b = false;
+                paramsN.put(pp[0],"");
+            }
+            if (b) paramsN.put(pp[0],pp[1]);
         }
         return postRealization(url,paramsN);
     }

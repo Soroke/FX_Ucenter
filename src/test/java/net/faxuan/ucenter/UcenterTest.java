@@ -15,13 +15,17 @@ public class UcenterTest extends TestCase{
     private Logger log = Logger.getLogger(this.getClass());
 
     @Test(dataProvider = "getData")
-    public void currency(String description,String precondition,String validation,String url,String params) {
+    public void currency(String apiType,String description,String precondition,String validation,String url,String params) {
         //打印测试描述log
         log.info(description);
         //检查预置条件是否为空
         if (isNull(precondition)) {
             //为空直接调用接口请求并验证返回
-            get(url,params).body(validation);
+            if (apiType.equals("POST")) {
+                post(url,params).body(validation);
+            } else {
+                get(url,params).body(validation);
+            }
         } else {
             /**
              * 不为空先使用预置条件中的登录信息登录
@@ -29,7 +33,11 @@ public class UcenterTest extends TestCase{
              * 最后退出登录用户
              */
             BaseLogin.signIn(precondition);
-            get(url,params).body(validation);
+            if (apiType.equals("POST")) {
+                post(url,params).body(validation);
+            } else {
+                get(url,params).body(validation);
+            }
             BaseLogin.signOut();
         }
     }

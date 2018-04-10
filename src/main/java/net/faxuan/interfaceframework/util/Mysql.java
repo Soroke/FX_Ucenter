@@ -226,12 +226,13 @@ public class Mysql {
                 obj = new Object[length][];
             }
             while (rs2.next()) {
+                Object apiType = rs2.getObject("api_type");
                 Object url = rs2.getObject("url");
                 Object params = rs2.getObject("params");
                 Object precondition = rs2.getObject("precondition");
                 Object result = rs2.getObject("expected_results");
                 Object description = rs2.getObject("description");
-                Object[] data = {description,precondition,result,url,params};
+                Object[] data = {apiType,description,precondition,result,url,params};
                 obj[rs2.getRow()-1] = data;
             }
         }catch (SQLException e){
