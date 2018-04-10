@@ -113,7 +113,13 @@ public class Response{
     }
 
     public void setBody(String body) {
-        this.body = body;
+        String[] bodys = body.split("\\n");
+        try {
+            bodys[1].equals("");
+            this.body = bodys[1];
+        } catch (IndexOutOfBoundsException ioobe) {
+            this.body = body;
+        }
     }
 
     public int getStatusCode() {
@@ -170,14 +176,30 @@ public class Response{
      * @return 本身
      */
     public Response body(String validationItem) {
-        String[] options = validationItem.split(";");
-        for (String option:options) {
-            String[] contrast = option.split("=");
-            String obj = JsonHelper.getValue(body,contrast[0]).toString();
-            Assert.assertEquals(obj,contrast[1]);
-            log.info("获取返回json中" + contrast[0] + "的值为：" + obj + "\t对比值为:" + contrast[1]);
+        System.out.println(validationItem);
+        String[] key = validationItem.split("=");
+        if (key[0].equals("body")) {
+            bodyValue(validationItem);
+        } else {
+            String[] options = validationItem.split(";");
+            for (String option:options) {
+                String[] contrast = option.split("=");
+                String obj = JsonHelper.getValue(body,contrast[0]).toString();
+                Assert.assertEquals(obj,contrast[1]);
+                log.info("获取返回json中" + contrast[0] + "的值为：" + obj + "\t对比值为:" + contrast[1]);
+            }
         }
+        return this;
+    }
 
+    /**
+     * 直接验证body等于某个值
+     * @param bodyValue
+     * @return 本身
+     */
+    public Response bodyValue(String bodyValue) {
+        String[] bb = bodyValue.split("=");
+        Assert.assertEquals(body.trim(),bb[1]);
         return this;
     }
 

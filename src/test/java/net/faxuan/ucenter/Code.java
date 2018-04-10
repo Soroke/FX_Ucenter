@@ -4,6 +4,7 @@ import static net.faxuan.interfaceframework.core.Http.*;
 
 import com.alibaba.fastjson.JSON;
 import net.faxuan.interfaceframework.core.UserLoginInfo;
+import net.faxuan.interfaceframework.util.JsonHelper;
 import net.faxuan.root.BaseLogin;
 import net.faxuan.root.sale.SaleLogin;
 import org.testng.annotations.Test;
@@ -45,6 +46,8 @@ public class Code {
             }
             System.out.println();
         }
+
+        codedConvert("d:\\1_Full.txt","d:\\a.txt");
     }
 
     @Test
@@ -205,22 +208,13 @@ public class Code {
     }
 
 
-//    public Boolean writeTOFile(String fileName,String content) {
-//        BufferedWriter bufferedWriter = null;
-//        try {
-//            bufferedWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileName, true),"UTF-8"));
-//            bufferedWriter.write(content);
-//            bufferedWriter.close();
-//        } catch (UnsupportedEncodingException e) {
-//            e.printStackTrace();
-//        } catch (FileNotFoundException e) {
-//            e.printStackTrace();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        return true;
-//
-//    }
+    @Test
+    public void soroke01() {
+String s = "$35\r";
+System.out.print(s.trim().equals("$35"));
+//        String[] s1 = s.split("\\n");
+//        s1[1].equals("");
+    }
 
 
 }

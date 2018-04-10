@@ -149,8 +149,15 @@ public class Http {
             pam = params.split("&");
         }
         for (String p:pam) {
+            boolean b = true;
             String pp[] = p.split("=");
-            paramsN.put(pp[0],pp[1]);
+            try {
+                pp[1].equals("");
+            } catch (ArrayIndexOutOfBoundsException e) {
+                b = false;
+                paramsN.put(pp[0],"");
+            }
+            if (b) paramsN.put(pp[0],pp[1]);
         }
         return getRealization(url,paramsN);
     }
@@ -208,6 +215,7 @@ public class Http {
             }
             url = url + "?" + param;
         }
+log.info("测试全量url：" + url);
         HttpGet httpGet = null;
         HttpResponse response = null;
         int count = 0;

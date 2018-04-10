@@ -1,4 +1,4 @@
-package net.faxuan.ucenter;
+package net.faxuan.sale;
 
 import net.faxuan.interfaceframework.core.TestCase;
 import net.faxuan.root.sale.SaleLogin;
@@ -17,6 +17,7 @@ public class SalesTest extends TestCase{
 
     @Test(dataProvider = "getData")
     public void currency(String description,String precondition,String validation,String url,String params) {
+        //setHeader("Cookie","rid=a5sd56236fw52sd6f542a11236sdf5wa");
         //打印测试描述log
         log.info(description);
         //检查预置条件是否为空

@@ -31,7 +31,8 @@ public class ExcelUtil {
      *          4：测试URL为空
      *          5：参数为空
      *          6：预期结果为空
-     *          7:操作数据库报错
+     *          7: 操作数据库报错
+     *          8：接口类型为空
      *
      * 调用示例：importExcelData("d:/uc数据导入.xslx","127.0.0.1","3306","uc","root","123456")
      */
@@ -39,12 +40,12 @@ public class ExcelUtil {
         int[] i = new int[2];
         i[0] = 2;
         i[1] = 0;
-        Mysql sql = new Mysql();
+        Mysql mysql = new Mysql();
         String url = "jdbc:mysql://" + ip + ":" + port + "/" + databaseName + "?useSSL=true&characterEncoding=UTF-8";
-        sql.setUrl(url);
-        sql.setUserName(userName);
-        sql.setPassWord(passWord);
-        boolean b = sql.connSQL();
+        mysql.setUrl(url);
+        mysql.setUserName(userName);
+        mysql.setPassWord(passWord);
+        boolean b = mysql.connSQL();
         if (!b) {
             i[1] = 1;
             return i;
@@ -70,6 +71,7 @@ public class ExcelUtil {
                 XSSFCell paramCell = row.getCell(3); // 参数
                 XSSFCell expectedResultCell = row.getCell(4); // 预期结果
                 XSSFCell descriptionCell = row.getCell(5); // 测试功能描述
+                XSSFCell apiTypeCell = row.getCell(6); //接口类型
 
                 /**
                  * 检查获取数据是否为空
@@ -80,6 +82,7 @@ public class ExcelUtil {
                 boolean paramIsNull = false;
                 boolean expectedResultIsNull = false;
                 boolean descriptionIsNull = false;
+                boolean apiTypeIsNull = false;
                 employeeInfoBuilder.append("测试数据 --> ");
                 //系统ID
                 try {
@@ -133,33 +136,48 @@ public class ExcelUtil {
                     descriptionIsNull = true;
                     employeeInfoBuilder.append(" , 测试功能描述 : ").append("无");
                 }
+                //接口类型
+                try {
+                    apiTypeCell.toString();
+                    employeeInfoBuilder.append(" , 接口类型 : ").append(apiTypeCell.getStringCellValue());
+                } catch (NullPointerException npe) {
+                    apiTypeIsNull = true;
+                    i[1] = 8;
+                    break;
+                }
 
 
 
 
                 //执行数据库插入
                 int caseID = 0;
-                ResultSet rs1 = sql.selectSQL("SELECT id FROM cases WHERE `sys_id`='" + systemIDCell + "';");
+                ResultSet rs1 = mysql.selectSQL("SELECT id FROM cases WHERE `sys_id`='" + systemIDCell + "';");
                 while (rs1.next()) {
                     caseID = rs1.getInt("id");
                 }
-                rs1 = sql.selectSQL("SELECT id FROM datas WHERE `case_id`=" + caseID + " AND url='" + URLCell + "' AND params='" + paramCell + "' AND expected_results='" + expectedResultCell + "';");
+                rs1 = mysql.selectSQL("SELECT id FROM datas WHERE `case_id`=" + caseID + " AND url='" + URLCell + "' AND params='" + paramCell + "' AND expected_results='" + expectedResultCell + "';");
                 rs1.last();
+                String sql = "";
                 if (rs1.getRow() <= 0) {
                     if (preconditionIsNull && descriptionIsNull) {
-                        sql.insertSQL("INSERT INTO datas(case_id,url,params,expected_results) VALUES(" + caseID + ",'" + URLCell + "','" + paramCell +"','" + expectedResultCell +"');");
+                        sql = "INSERT INTO datas(case_id,api_type,url,params,expected_results) VALUES(" + caseID + ",'" + apiTypeCell + "','" + URLCell + "','" + paramCell +"','" + expectedResultCell +"');";
+
                         System.out.println(employeeInfoBuilder.toString()+ "----->导入成功");
                     } else if (preconditionIsNull && !descriptionIsNull){
-                        sql.insertSQL("INSERT INTO datas(case_id,url,params,expected_results,description) VALUES(" + caseID + ",'" + URLCell + "','" + paramCell +"','" + expectedResultCell +"','" + descriptionCell +"');");
+                        sql = "INSERT INTO datas(case_id,api_type,url,params,expected_results,description) VALUES(" + caseID + ",'" + apiTypeCell + "','" + URLCell + "','" + paramCell +"','" + expectedResultCell +"','" + descriptionCell +"');";
+
                         System.out.println(employeeInfoBuilder.toString()+ "----->导入成功");
                     }else if (!preconditionIsNull && descriptionIsNull){
-                        sql.insertSQL("INSERT INTO datas(case_id,url,params,expected_results,precondition) VALUES(" + caseID + ",'" + URLCell + "','" + paramCell +"','" + expectedResultCell +"','"  + preconditionCell +"');");
+                        sql = "INSERT INTO datas(case_id,api_type,url,params,expected_results,precondition) VALUES(" + caseID + ",'" + apiTypeCell + "','" + URLCell + "','" + paramCell +"','" + expectedResultCell +"','"  + preconditionCell +"');";
+
                         System.out.println(employeeInfoBuilder.toString()+ "----->导入成功");
                     }else if (!preconditionIsNull && !descriptionIsNull){
-                        sql.insertSQL("INSERT INTO datas(case_id,url,params,expected_results,description,precondition) VALUES(" + caseID + ",'" + URLCell + "','" + paramCell +"','" + expectedResultCell +"','" + descriptionCell +"','" + preconditionCell +"');");
+                        sql = "INSERT INTO datas(case_id,api_type,url,params,expected_results,description,precondition) VALUES(" + caseID + ",'" + apiTypeCell + "','" + URLCell + "','" + paramCell +"','" + expectedResultCell +"','" + descriptionCell +"','" + preconditionCell +"');";
+
                         System.out.println(employeeInfoBuilder.toString()+ "----->导入成功");
                     }
                 } else System.err.println(employeeInfoBuilder.toString()+ "----->数据已存在");
+                mysql.insertSQL(sql);
             }
             workbook.close();
         } catch (FileNotFoundException e) {
@@ -170,7 +188,7 @@ public class ExcelUtil {
             i[1]=7;
             e.printStackTrace();
         } finally {
-            sql.deconnSQL();
+            mysql.deconnSQL();
         }
 
         return i;

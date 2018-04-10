@@ -7,21 +7,11 @@
     <parameter name="mysql_user" value="root" />
     <parameter name="mysql_pwd" value="xfDB_xntest.223" />
 
-    <test name="用户中心接口测试(数据驱动)">
-        <classes>
-            <class name="net.faxuan.ucenter.UcenterTest"/>
-        </classes>
-    </test>
 
-    <test name="用户中心接口测试(代码验证)">
-        <classes>
-            <class name="net.faxuan.ucenter.Code"/>
-        </classes>
-    </test>
 
     <test name="销账系统接口测试(数据驱动)">
         <classes>
-            <class name="net.faxuan.ucenter.SalesTest"/>
+            <class name="net.faxuan.sale.SalesTest"/>
         </classes>
     </test>
 
