@@ -204,6 +204,15 @@ public class Response{
     }
 
     /**
+     * 直接验证body等于某个值
+     * @param key
+     * @return 本身
+     */
+    public String getBodyValue(String key) {
+        return JsonHelper.getValue(body,key).toString();
+    }
+
+    /**
      * 根据传入参数获取指定的值
      * @param position
      * @return

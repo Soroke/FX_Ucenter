@@ -11,6 +11,7 @@ public class SaleUserInfo {
     private int roleId;
     private String roleName;
     private String sid;
+    private String operator;
     private int status;
 
 
@@ -68,5 +69,13 @@ public class SaleUserInfo {
 
     public void setStatus(int status) {
         this.status = status;
+    }
+
+    public String getOperator() {
+        return operator;
+    }
+
+    public void setOperator(String operator) {
+        this.operator = operator;
     }
 }

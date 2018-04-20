@@ -36,7 +36,6 @@ public class SalesTest extends TestCase{
              * 最后退出登录用户
              */
             SaleLogin.signInAdmin(precondition);
-            System.out.println("1111111111111111" + apiType + "222222222222s22");
             if (apiType.equals("POST")) {
                 post(url,params).body(validation);
             } else {

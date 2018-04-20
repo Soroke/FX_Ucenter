@@ -4,14 +4,19 @@ import static net.faxuan.interfaceframework.core.Http.*;
 
 import com.alibaba.fastjson.JSON;
 import net.faxuan.interfaceframework.core.UserLoginInfo;
-import net.faxuan.interfaceframework.util.JsonHelper;
+import net.faxuan.interfaceframework.util.Mysql;
 import net.faxuan.root.BaseLogin;
 import net.faxuan.root.sale.SaleLogin;
+import net.faxuan.sale.Init;
 import org.testng.annotations.Test;
 
 
 import java.io.*;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -208,13 +213,66 @@ public class Code {
     }
 
 
+    //添加微信成绩
     @Test
-    public void soroke01() {
-String s = "$35\r";
-System.out.print(s.trim().equals("$35"));
-//        String[] s1 = s.split("\\n");
-//        s1[1].equals("");
+    public void addweixinGrade() {
+        //需要插入成绩的app id
+        String APP_ID = "wxe572e63fc8875196";
+        //需要插入成绩的活动ID
+        String ACTIVITY_ID = "399";
+
+        //连接数据库
+        Mysql mysql = new Mysql();
+        mysql.setUrl("jdbc:mysql://27.221.53.20:59903/webchat?useSSL=true&characterEncoding=UTF-8");
+        mysql.setUserName("root");
+        mysql.setPassWord("neshopt@root..");
+        mysql.connSQL();
+        /**
+         * 获取当前时间
+         */
+        Date d = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String currentTime = sdf.format(d);
+
+        /**
+         * 存储获取的用户openID
+         */
+        Map<String,String> user = new HashMap<>();
+        //查询用户表获取用户openID
+        ResultSet rs1 = mysql.selectSQL("SELECT * FROM `webchat_user` WHERE REAL_NAME LIKE '逗比%'");
+
+        //记录查询的用户openID和名称
+        try {
+            while (rs1.next()) {
+                user.put(rs1.getNString("REAL_NAME"),rs1.getString("USER_OPENID"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        /**
+         * 插入成绩表数据
+         */
+        int i = 1;
+        for (String value : user.values()) {
+            if (i>= 100) i = 100;
+            mysql.insertSQL("INSERT INTO webchat_user_grade(APP_ID,USER_OPENID,ACTIVITY_ID,GRADE,CREATE_TIME) VALUES('" + APP_ID + "','" + value + "'," + ACTIVITY_ID + "," + i + ",'" + currentTime + "')");
+            i ++;
+        }
+        //关闭数据库连接
+        mysql.deconnSQL();
     }
 
+    @Test
+    public void asd() {
+        String lineStr = "http://salegl.t.faxuan.net/saless/service/invoiceService!doExport.do?areaCode=000000&domainName=北京法宣在线科技有限公司20180418153251&roleId=1&start=0&length=6000";
+        System.out.println(new Init().urlEnCode(lineStr));
+        try {
+            System.out.println(URLEncoder.encode(lineStr,"UTF-8"));
+            System.out.println(URLDecoder.decode(lineStr,"UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+    }
 
 }

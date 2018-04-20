@@ -1,9 +1,7 @@
 package net.faxuan.interfaceframework.core;
 
-import org.apache.http.Header;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
+import org.apache.http.*;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
@@ -11,12 +9,16 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.apache.log4j.Logger;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.*;
@@ -34,7 +36,11 @@ public class Http {
      */
      private static Map<Object,Object> headers = new HashMap<Object, Object>();
 
-     /**
+    /**
+     * MultipartEntityBuilder
+     */
+    private static MultipartEntityBuilder builder = null;
+    /**
      * Cookies
      */
      private static CookieStore cookieStore = null;
@@ -101,6 +107,31 @@ public class Http {
         return postRealization(url,params[0]);
     }
 
+//    /**
+//     * post请求的传参方法
+//     * @param url
+//     * @param params
+//     * @return
+//     */
+//    public static Response post(String url, String fileParamName,File file, Map<Object,Object> ... params) {
+//        builder.addBinaryBody(fileParamName, file);
+//        if (params.length != 0) {
+//            for (Map.Entry<Object, Object> entry : params[0].entrySet()) {
+//                builder.addTextBody(entry.getKey().toString(), entry.getValue().toString(), ContentType.TEXT_PLAIN.withCharset("UTF-8"));
+//            }
+//        }
+//        HttpEntity httpEntity = builder.build();
+//        return postRealization(url,httpEntity);
+//    }
+//
+//    private static Response post(String url,Map<Object,Object> params) {
+//        for (Map.Entry<Object, Object> entry : params.entrySet()) {
+//            builder.addTextBody(entry.getKey().toString(), entry.getValue().toString(), ContentType.TEXT_PLAIN.withCharset("UTF-8"));
+//        }
+//        HttpEntity httpEntity = builder.build();
+//        return postRealization(url,httpEntity);
+//    }
+
     /**
      * post请求的传参方法
      * @param url
@@ -119,7 +150,14 @@ public class Http {
                 b = false;
                 paramsN.put(pp[0],"");
             }
-            if (b) paramsN.put(pp[0],pp[1]);
+            if (b) {
+                if (pp[1].contains("'semicolon'")) {
+                    paramsN.put(pp[0],pp[1].replaceAll("'semicolon'",";"));
+                } else {
+                    paramsN.put(pp[0],pp[1]);
+
+                }
+            }
         }
         return postRealization(url,paramsN);
     }
@@ -159,7 +197,16 @@ public class Http {
                 b = false;
                 paramsN.put(pp[0],"");
             }
-            if (b) paramsN.put(pp[0],pp[1]);
+
+
+            if (b) {
+                if (pp[1].contains("'semicolon'")) {
+                    paramsN.put(pp[0],pp[1].replaceAll("'semicolon'",";"));
+                } else {
+                    paramsN.put(pp[0],pp[1]);
+
+                }
+            }
         }
         return getRealization(url,paramsN);
     }
@@ -228,6 +275,7 @@ log.info("测试全量url：" + url);
         while(count < 3) {
             httpGet = new HttpGet(url);
             addHeaderToHttpRequest(httpGet);
+
             //请求开始时间
             startTime = new Date().getTime();
             try {
@@ -366,6 +414,70 @@ log.info("测试全量url：" + url);
         rsp.setRunTime(runTime);
         rsp.setResponseType(ResponseType.POST);
         rsp.setCookies(cookieStore);
+        //保存header
+        Header[] headers = response.getAllHeaders();
+        Map<Object,Object> hashMap= new HashMap<Object,Object>();
+        for (Header header:headers) {
+            hashMap.put(header.getName(),header.getValue());
+        }
+        rsp.setHeaders(hashMap);
+        rsp.setStatusCode(response.getStatusLine().getStatusCode());
+        log.info(rsp);
+        return rsp;
+    }
+
+
+    /**
+     * 发送附带文件的post请求
+     * @param serverUrl url地址
+     * @param fileParamName 文件类型
+     * @param file  文件
+     * @param params  参数
+     * @return
+     */
+    public static Response post(String serverUrl, String fileParamName, File file, Map<Object, Object> params) {
+        Response rsp = new Response();
+        //用于计算接口请求响应时间
+        Long startTime = 0L;
+        long runTime = 0L;
+        log.info("------------------------开始请求------------------------");
+        log.info("接口类型：post");
+        log.info("接口URL为：" + serverUrl);
+        HttpPost httpPost = new HttpPost(serverUrl);
+        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+        // 上传的文件
+        builder.addBinaryBody(fileParamName, file);
+        // 设置其他参数
+        for (Map.Entry<Object, Object> entry : params.entrySet()) {
+            log.info("参数：\"" +entry.getKey() + "\":\"" + entry.getValue() + "\"");
+            builder.addTextBody(entry.getKey().toString(), entry.getValue().toString(), ContentType.TEXT_PLAIN.withCharset("UTF-8"));
+        }
+        HttpEntity httpEntity = builder.build();
+        httpPost.setEntity(httpEntity);
+        HttpClient httpClient = HttpClients.createDefault();
+        HttpResponse response = null;
+        try {
+            startTime = new Date().getTime();
+            response = httpClient.execute(httpPost);
+            rsp.setBody(EntityUtils.toString(response.getEntity(), encode));
+            runTime = new Date().getTime() - startTime;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        log.info("接口响应时间为：" + runTime + "ms");
+        log.info("------------------------请求结束------------------------");
+        rsp.setUrl(serverUrl);
+        rsp.setRunTime(runTime);
+        rsp.setResponseType(ResponseType.POST);
+        rsp.setCookies(cookieStore);
+        if (null == response || response.getStatusLine() == null) {
+//            logger.info("Post Request For Url[{}] is not ok. Response is null", serverUrl);
+            return null;
+        } else if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
+//            logger.info("Post Request For Url[{}] is not ok. Response Status Code is {}", serverUrl,
+//                    response.getStatusLine().getStatusCode());
+            return null;
+        }
         //保存header
         Header[] headers = response.getAllHeaders();
         Map<Object,Object> hashMap= new HashMap<Object,Object>();

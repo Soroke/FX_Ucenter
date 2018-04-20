@@ -20,7 +20,7 @@ public class SaleLogin {
         saleUserInfo.setRoleName(JsonHelper.getValue(response.getBody(),"data.roleName").toString());
         saleUserInfo.setSid(JsonHelper.getValue(response.getBody(),"data.sid").toString());
         saleUserInfo.setStatus(Integer.valueOf(JsonHelper.getValue(response.getBody(),"data.status").toString()));
-
+        saleUserInfo.setOperator(JsonHelper.getValue(response.getBody(),"data.operator").toString());
         return saleUserInfo;
     }
 }
