@@ -15,10 +15,10 @@ import java.util.*;
 import static net.faxuan.interfaceframework.core.Http.*;
 
 /**
- * 后台
+ * 前后台交互
  * Created by song on 2018/4/17.
  */
-public class Process extends Init {
+public class Interactive extends Init {
     Product product1 = new Product();
     Product product2 = new Product();
     //发货单ID
@@ -31,6 +31,12 @@ public class Process extends Init {
     String FPID = "";
     //发票和到账的匹配关系序号
     String RELATED_INDEX = "";
+    //汇款人名称
+    String payment = "迪丽热巴" + dateaNumber;
+    //汇款人手机号
+    String telPhone = "18513111927";
+    //首次申购 申购单ID
+    String firstSubscribeId = "";
 
     @BeforeClass
     public void beforeClass() {
@@ -50,6 +56,9 @@ public class Process extends Init {
 
     String firstPurchaseSubscribeCode = "";
 
+    /**
+     * 前端的
+     */
     @Test(description = "首次申购",priority = 1)
     public void firstPurchase() {
         post("http://salemh.t.faxuan.net/saless/fservice/frontSubscribeService!doSaveFSubscribe.do","areaCode=542424;" +
@@ -109,8 +118,9 @@ public class Process extends Init {
     }
 
 
-
-
+    /**
+     * 后台流程1
+     */
     @Test(description = "测试登录",priority = 101)
     public void signin() {
         get("http://salegl.t.faxuan.net/saless/service/adminService!doAdminLogin.do","adminAccount=songrenkun;adminPassword=888888;code=;rid=f33041280298acc79549285da148b598;key=0;login=0").body("code=200;msg=登录成功");
@@ -131,7 +141,7 @@ public class Process extends Init {
     }
 
     @Test(description = "添加发货单",priority = 104)
-    public void addInvoice() {
+    public void addDelivery() {
         Double book1mayang = (double) product1.getUnitPrice()*6;
         Double book2mayang = (double)product2.getUnitPrice()*8;
 
@@ -349,11 +359,10 @@ public class Process extends Init {
                 .body("code=200;msg=该信息已经提交审核！");
     }
 
-
     @Test(description = "销账审批不通过",priority = 117)
     public void approveCharge() {
         post("http://salegl.t.faxuan.net/saless/service/chargeManageService!approveCharge.do",
-                "version=1;flag=2;approceSuggest=审批意见;userAccount=" +
+                "version=1;flag=2;approceSuggest=autoTest" + dateaNumber + ";userAccount=" +
                         saleUserInfo.getOperator() + ";relatedIndex=" + RELATED_INDEX).body("code=200;msg=审核成功");
     }
 
@@ -456,7 +465,6 @@ public class Process extends Init {
         String body = get("http://salemh.t.faxuan.net/getIdentifyCode","rid=" + rid).getBody();
         return body.split("\\r")[0];
     }
-
 
 
 }

@@ -22,19 +22,17 @@ import java.util.List;
  * Created by song on 2018/4/17.
  */
 public class Init {
+    //mysql对象
     Mysql mysql = new Mysql();
+    //当前系统时间
     Date date = new Date();
     String dateNow = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
     String dateaNumber = new SimpleDateFormat("yyyyMMddHHmmss").format(date);
-
+    //rid固定
     String rid = "a5sd56236fw52sd6f542a11236sdf5wa";
-    //汇款人名称
-    String payment = "迪丽热巴" + dateaNumber;
-    //汇款人手机号
-    String telPhone = "18513111927";
+    //登录对象
     SaleUserInfo saleUserInfo = new SaleUserInfo();
-    //首次申购 申购单ID
-    String firstSubscribeId = "";
+
 
     @BeforeClass
     public void before() {

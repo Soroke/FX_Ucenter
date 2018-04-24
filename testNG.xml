@@ -8,9 +8,10 @@
     <parameter name="mysql_pwd" value="xfDB_xntest.223" />
 
 
-    <test name="销账系统接口测试(数据驱动)">
+    <test name="销账系统接口测试(流程编写)">
         <classes>
-            <class name="net.faxuan.sale.Process"/>
+            <class name="net.faxuan.sale.Interactive"/>
+            <class name="net.faxuan.sale.Backstage"/>
         </classes>
     </test>
 

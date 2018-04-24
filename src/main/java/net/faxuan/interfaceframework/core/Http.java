@@ -9,6 +9,7 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.conn.HttpClientConnectionManager;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.BasicCookieStore;
@@ -72,6 +73,7 @@ public class Http {
      *      http的对象例如 HttpGet、HttpPost
      */
     private static void addHeaderToHttpRequest(HttpRequestBase httpRequestBase) {
+        headers.put("Connection", "close");
         if(!headers.isEmpty()) {
             for(Map.Entry<Object, Object> entry : headers.entrySet()){
                 httpRequestBase.addHeader(entry.getKey().toString(), entry.getValue().toString());
@@ -86,7 +88,11 @@ public class Http {
     }
 
     public static void setHeader(Map<Object,Object> header) {
-        headers = header;
+        if(!header.isEmpty()) {
+            for(Map.Entry<Object, Object> entry : header.entrySet()){
+                headers.put(entry.getKey().toString(), entry.getValue().toString());
+            }
+        }
     }
 
     /**
