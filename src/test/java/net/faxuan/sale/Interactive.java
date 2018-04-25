@@ -37,6 +37,8 @@ public class Interactive extends Init {
     String telPhone = "18513111927";
     //首次申购 申购单ID
     String firstSubscribeId = "";
+    //获取验证码
+    String identifyCode = "";
 
     @BeforeClass
     public void beforeClass() {
@@ -51,6 +53,7 @@ public class Interactive extends Init {
         product2.setIsbnCode("ISNSGYY");
         product2.setStorage("1102");
         product2.setUnitPrice(100);
+        identifyCode = getIdentifyCode();
     }
 
 
@@ -64,7 +67,7 @@ public class Interactive extends Init {
         post("http://salemh.t.faxuan.net/saless/fservice/frontSubscribeService!doSaveFSubscribe.do","areaCode=542424;" +
                 "domainName=" + invoiceDomainName + ";payment=" + payment + ";adminAccount=;telPhone=" + telPhone + ";email=songrenkun@faxuan.net;" +
                 "payMoney=10000;peopleNum=10;payYear=5;isMinus=1;minusAccount=;credentials=20180418_a37e758c090943b9a7173a0d80c0cb12.jpg'semicolon';" +
-                "remark=首次申购备注;chooseInvoiceType=0;filesPath=;validateCode=" + getIdentifyCode() + ";rid=" + rid).body("code=200;msg=操作成功");
+                "remark=首次申购备注;chooseInvoiceType=0;filesPath=;validateCode=" + identifyCode + ";rid=" + rid).body("code=200;msg=操作成功");
         try {
             Thread.sleep(5000);
         } catch (InterruptedException e) {
@@ -91,7 +94,7 @@ public class Interactive extends Init {
                 "'taxpayersCode':'NSRSBH" + dateaNumber + "','address':'北京市海淀区北三环西路32号恒润国际大厦','telPhone':'0102365245'," +
                 "'bankName':'中国工商银行','bankCode':'622765216585','price':'1000'" +
                 ",'number':'10','total':'10000','mobilePhone':'" + telPhone + "','contactName':'','mailAddress':'','email':'songrenkun@faxuan.net'};" +
-                "filesPath=;validateCode=" + getIdentifyCode() + ";rid=" + rid).body("code=200;msg=操作成功");
+                "filesPath=;validateCode=" + identifyCode + ";rid=" + rid).body("code=200;msg=操作成功");
         try {
             Thread.sleep(5000);
         } catch (InterruptedException e) {
@@ -102,7 +105,7 @@ public class Interactive extends Init {
 
     @Test(description = "申购查询",priority = 3)
     public void purchaseSearch() {
-        post("http://salemh.t.faxuan.net/saless/fservice/frontSubscribeService!doGetFSubscribeList.do","payment=" + payment + ";telPhone=" + telPhone + ";validateCode=" + getIdentifyCode() + ";rid=" + rid)
+        post("http://salemh.t.faxuan.net/saless/fservice/frontSubscribeService!doGetFSubscribeList.do","payment=" + payment + ";telPhone=" + telPhone + ";validateCode=" + identifyCode + ";rid=" + rid)
                 .body("code=200");
     }
 
@@ -114,7 +117,7 @@ public class Interactive extends Init {
                         "'address':'北京市海淀区北三环西路32号恒润国际大厦','telPhone':'0102365245','bankName':'中国工商银行'," +
                         "'bankCode':'622765216585','price':'1000','number':'10','total':'10000','mobilePhone':'18513111927'," +
                         "'contactName':'','mailAddress':'','email':'songrenkun@faxuan.net'};" +
-                        "filesPath=;validateCode=" + getIdentifyCode() + ";rid=" + rid).body("code=200;msg=操作成功");
+                        "filesPath=;validateCode=" + identifyCode + ";rid=" + rid).body("code=200;msg=操作成功");
     }
 
 
